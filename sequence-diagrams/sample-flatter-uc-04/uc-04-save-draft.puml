@@ -1,0 +1,61 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04 Build Weekly Roster
+
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "audit:AuditEntry" as audit <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+
+' Sample decomposition; behavioural scope, bindings and source mappings: README.md.
+' Database messages use the requested business-operation abstraction; see README.md.
+note over roster, db
+  The Manager chose to save the current draft.
+  No invalid-ambulance warning is outstanding.
+end note
+activate roster
+roster -> db: saveDraft(week)
+activate db
+db -->> roster: roster retained as draft
+deactivate db
+roster -> audit: recordChange("draft saved", actor, time,\npreviousDraft, currentDraft, null)
+activate audit
+audit -->> roster: auditData
+deactivate audit
+roster -> db: saveAuditRecord(auditData)
+activate db
+db -->> roster: draft-save audit entry stored
+deactivate db
+deactivate roster
+/'
+Original SQL retained for the associated operation:
+-- Retain this week's roster as a draft
+UPDATE WeeklyRoster SET status = 'draft'
+WHERE rosterWeek = :week AND status = 'draft';
+
+-- Record saving of the current draft
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+'/
+@enduml

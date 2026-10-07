@@ -1,0 +1,88 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04 Build Weekly Roster
+
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "slot:RosterSlot" as slot <<entity>> #EDF6EC
+participant "assignment:Assignment" as assignment <<entity>> #EDF6EC
+participant "audit:AuditEntry" as audit <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+
+' Sample decomposition; behavioural scope, bindings and source mappings: README.md.
+' Database messages use the requested business-operation abstraction; see README.md.
+note over roster, db
+  UC-13 allowed the proposal.
+  The selected ambulance has not been made unavailable.
+end note
+activate roster
+roster -> assignment: prepare(proposal, confirmed)
+activate assignment
+assignment -->> roster: confirmedAssignmentData
+deactivate assignment
+roster -> db: saveStaffAssignment(confirmedAssignmentData, slotChanges)
+activate db
+db -->> roster: staff assignment and slot changes saved
+deactivate db
+roster -> slot: staffingStatus(updatedSlotAssignments, crewPolicy)
+activate slot
+slot -->> roster: missingRoles, staffRequired, isFullyStaffed
+deactivate slot
+roster -> audit: recordChange("draft assignment saved", actor, time,\npreviousValues, newValues, null)
+activate audit
+audit -->> roster: auditData
+deactivate audit
+roster -> db: saveAuditRecord(auditData)
+activate db
+db -->> roster: assignment-and-slot change audit entry stored
+deactivate db
+deactivate roster
+/'
+Original SQL retained for the associated operation:
+-- Store this ambulance's new roster slot
+INSERT INTO RosterSlot
+(slotID, rosterWeek, shiftID, ambulanceNumber)
+VALUES (:slotId, :week, :shiftId, :ambulanceId);
+
+-- Set the selected ambulance for this slot
+UPDATE RosterSlot SET ambulanceNumber = :ambulanceId
+WHERE slotID = :slotId;
+
+-- Store the confirmed staff assignment
+INSERT INTO Assignment
+(assignmentID, slotID, staffID, fulfilledRoles, confirmationStatus)
+VALUES (:assignmentId, :slotId, :staffId, :roles, 'confirmed');
+
+-- Replace the staff member assigned to these roles
+UPDATE Assignment
+SET staffID = :staffId, fulfilledRoles = :roles,
+  confirmationStatus = 'confirmed'
+WHERE assignmentID = :replacedAssignmentId
+  AND slotID = :slotId;
+
+-- Record the draft assignment and slot changes
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+'/
+@enduml

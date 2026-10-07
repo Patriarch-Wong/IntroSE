@@ -1,0 +1,116 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04 Build Weekly Roster
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "rules:AssignmentRuleControl" as rules <<control>> #FFF3DA
+participant "staff:Staff" as staff <<entity>> #EDF6EC
+participant "ambulance:Ambulance" as ambulance <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+
+' Sample decomposition; behavioural scope, bindings and source mappings: README.md.
+' Database messages use the requested business-operation abstraction; see README.md.
+note over manager, db
+  A draft slot and eligible ambulance options are available.
+end note
+manager -> rosterUI: chooseRoleOrReplacement(ambulanceId, roles,\nreplacedAssignmentId?)
+activate rosterUI
+' Main 6-9; alternative 8a returns to the shared candidate display.
+' First attempt is true only on entry after choosing a role/replacement.
+' Each loop entry has one pending boundary request: chooseRoleOrReplacement
+' initially, or the rejected/cancelled selectCandidate on a retry.
+loop first attempt or previous result prevented/cancelled
+  rosterUI -> roster: listCandidates(selection)
+  activate roster
+  ' Candidate retrieval is abstracted; its original SQL is retained below.
+  loop for each candidate
+    roster -> staff: assignedHours(week, assignmentRecords, policy)
+    activate staff
+    staff -->> roster: assignedHours: Hours
+    deactivate staff
+  end
+  roster -->> rosterUI: candidateView
+  deactivate roster
+  rosterUI -->> manager: up to three suitable candidates: availability,\nassigned hours, job preference and location for the date
+  deactivate rosterUI
+
+  manager -> rosterUI: selectCandidate(staffId)
+  activate rosterUI
+  rosterUI -> roster: assignCandidate(staffId, selection)
+  activate roster
+  ' Rule-context retrieval is abstracted; its original SQL is retained below.
+  ' Context excludes the replaced assignment where appropriate, preserving
+  ' all unrelated commitments; I02 PolicyContext remains unresolved.
+  ' This interaction use is the whole invocation and return, not a second call.
+  ref over manager, rosterUI, roster, rules, staff, ambulance
+    UC-13 Check Assignment Rule
+    result = checkAssignment(proposal, context)
+    baseControl = roster:RosterControl
+  end ref
+  ' Main 9: both conditions are necessary for persistence.
+  opt result is allowed and ambulance has not been made unavailable
+    ref over roster, db
+      UC-04 / Save accepted assignment
+      staffingStatus = persistAccepted(proposal, workingContext)
+    end ref
+  end
+  ' AssignmentOutcome is exactly one of saved, notAccepted or warning.
+  ' I07: unavailable detection/continuation remain unresolved. Preserve
+  ' the baseline warning exit, without adding an event or recovery.
+  roster -->> rosterUI: saved(staffingStatus) / notAccepted(result) /\ninvalidAmbulanceWarning(affectedSlot)
+  deactivate roster
+  alt result is prevented(reason) or cancelled
+    ' 8a1-8a2: no write; present the outcome before retrying step 6.
+    ' The next iteration refreshes candidates and completes this request.
+    rosterUI ->> manager: assignment not saved: reason or cancellation
+  else result is allowed and no invalid-ambulance warning
+    rosterUI -->> manager: assignment saved; slot updated;\nremaining roles requiring manpower identified
+  else invalid-ambulance warning
+    rosterUI -->> manager: draft contains an invalid ambulance assignment
+  end
+end
+deactivate rosterUI
+/'
+Original SQL retained for the associated operation:
+-- Retrieve up to three suitable staff candidates
+SELECT staffID, availability, assignmentRecords,
+  jobPreference, datedLocation
+FROM CandidateOption
+WHERE rosterWeek = :week AND shiftID = :shiftId
+  AND ambulanceNumber = :ambulanceId
+  AND requestedRoles = :roles
+FETCH FIRST 3 ROWS ONLY;
+
+-- Retrieve this candidate's assignment-rule context
+SELECT * FROM StaffRuleContext
+WHERE staffID = :staffId AND rosterWeek = :week;
+
+-- Retrieve this ambulance's slots in the selected shift
+SELECT * FROM RosterSlot
+WHERE ambulanceNumber = :ambulanceId
+  AND shiftID = :shiftId;
+'/
+@enduml

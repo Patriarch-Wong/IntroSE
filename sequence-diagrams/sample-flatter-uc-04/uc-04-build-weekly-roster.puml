@@ -1,0 +1,245 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04 Build Weekly Roster
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary\nRoster Allocation Page" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "rules:AssignmentRuleControl" as rules <<control>> #FFF3DA
+participant "staff:Staff" as staff <<entity>> #EDF6EC
+participant "ambulance:Ambulance" as ambulance <<entity>> #EDF6EC
+participant "slot:RosterSlot" as slot <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+
+' Scope: main draft-allocation flow plus UC-13 prevented/cancelled retry.
+' Other alternatives remain in uc-04-scenario-overview.puml and its references.
+' User-requested presentation: key persistence operation names on arrows;
+' original SQL in attached notes and source comments, not on every arrow.
+' Supporting reads are abstracted at this business-flow level, not deleted.
+' Each convenience persistence operation includes the SQL effects documented below.
+' These operations do not assert transactions, locks, caching or recovery guarantees.
+note over manager, roster
+  Manager is logged in and plans a roster week
+  within the five-week planning period.
+end note
+
+manager -> rosterUI: openAllocation(week)
+activate rosterUI
+rosterUI -> roster: openWeek(week)
+activate roster
+/'
+Original SQL retained for the associated operation:
+-- Retrieve the selected week's roster
+SELECT * FROM WeeklyRoster
+WHERE rosterWeek = :week;
+
+-- Create an empty draft for this week
+INSERT INTO WeeklyRoster (rosterWeek, status)
+VALUES (:week, 'draft');
+
+-- Record creation of this week's draft
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+
+-- Retrieve roster details and staff availability
+SELECT * FROM WeekPlanningView
+WHERE rosterWeek = :week;
+'/
+roster -> db: retrieveOrCreateWeeklyRoster(week)
+activate db
+note right of db
+-- Retrieve the selected week's roster
+SELECT * FROM WeeklyRoster
+WHERE rosterWeek = :week;
+
+-- If absent, create an empty draft
+INSERT INTO WeeklyRoster (rosterWeek, status)
+VALUES (:week, 'draft');
+end note
+db -->> roster: draftRoster, planningData
+deactivate db
+roster -->> rosterUI: rosterView
+deactivate roster
+rosterUI -->> manager: draft slots, staff availability\nand roles requiring manpower
+deactivate rosterUI
+
+loop Manager continues allocating staff
+  manager -> rosterUI: selectSlot(shiftId, slotSelection)
+  activate rosterUI
+  rosterUI -> roster: selectSlot(shiftId, slotSelection)
+  activate roster
+/'
+Original SQL retained for the associated operation:
+-- Find eligible ambulances for this shift and slot
+SELECT a.ambulanceNumber
+FROM Ambulance a JOIN AmbulanceAvailability u
+  ON u.ambulanceNumber = a.ambulanceNumber
+WHERE a.activeStatus = 'active' AND u.shiftID = :shiftId
+  AND u.available = TRUE AND NOT EXISTS
+  (SELECT 1 FROM RosterSlot r
+   WHERE r.ambulanceNumber = a.ambulanceNumber
+     AND r.shiftID = :shiftId
+     AND (:slotId IS NULL OR r.slotID <> :slotId));
+'/
+  roster -->> rosterUI: eligibleAmbulanceRecords[]
+  deactivate roster
+  rosterUI -->> manager: active, available ambulances\nwith no other same-shift slot
+  deactivate rosterUI
+
+  manager -> rosterUI: chooseRoleOrReplacement(ambulanceId, roles)
+  activate rosterUI
+  ' The pending request is the role selection on first entry, or the previous
+  ' prevented/cancelled candidate selection while its candidates are refreshed.
+  loop first attempt or previous result prevented/cancelled
+    rosterUI -> roster: listCandidates(selection)
+    activate roster
+/'
+Original SQL retained for the associated operation:
+-- Retrieve up to three suitable staff candidates
+SELECT staffID, availability, assignmentRecords,
+  jobPreference, datedLocation
+FROM CandidateOption
+WHERE rosterWeek = :week AND shiftID = :shiftId
+  AND ambulanceNumber = :ambulanceId
+  AND requestedRoles = :roles
+FETCH FIRST 3 ROWS ONLY;
+'/
+    loop for each candidate
+      roster -> staff: assignedHours(week, assignmentRecords, policy)
+      activate staff
+      staff -->> roster: assignedHours
+      deactivate staff
+    end
+    roster -->> rosterUI: candidateView
+    deactivate roster
+    rosterUI -->> manager: up to three suitable candidates: availability,\nassigned hours, preference and location for the date
+    deactivate rosterUI
+
+    manager -> rosterUI: selectCandidate(staffId)
+    activate rosterUI
+    rosterUI -> roster: assignCandidate(staffId, selection)
+    activate roster
+/'
+Original SQL retained for the associated operation:
+-- Retrieve this candidate's assignment-rule context
+SELECT * FROM StaffRuleContext
+WHERE staffID = :staffId AND rosterWeek = :week;
+
+-- Retrieve this ambulance's slots in the selected shift
+SELECT * FROM RosterSlot
+WHERE ambulanceNumber = :ambulanceId
+  AND shiftID = :shiftId;
+'/
+    ref over manager, rosterUI, roster, rules, staff, ambulance
+      UC-13 Check Assignment Rule
+      result = checkAssignment(proposal, context)
+      baseControl = roster:RosterControl
+    end ref
+
+    alt result is allowed
+/'
+Original SQL retained for the associated operation:
+-- Store this ambulance's new roster slot
+INSERT INTO RosterSlot
+(slotID, rosterWeek, shiftID, ambulanceNumber)
+VALUES (:slotId, :week, :shiftId, :ambulanceId);
+
+-- Set the selected ambulance for this slot
+UPDATE RosterSlot SET ambulanceNumber = :ambulanceId
+WHERE slotID = :slotId;
+
+-- Store the confirmed staff assignment
+INSERT INTO Assignment
+(assignmentID, slotID, staffID, fulfilledRoles, confirmationStatus)
+VALUES (:assignmentId, :slotId, :staffId, :roles, 'confirmed');
+
+-- Record the draft assignment and slot changes
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+'/
+      roster -> db: saveStaffAssignment(proposal, auditData)
+      activate db
+note right of db
+-- Store the confirmed staff assignment
+INSERT INTO Assignment
+(assignmentID, slotID, staffID, fulfilledRoles, confirmationStatus)
+VALUES (:assignmentId, :slotId, :staffId, :roles, 'confirmed');
+end note
+      db -->> roster: assignment, slot changes and audit saved
+      deactivate db
+      roster -> slot: staffingStatus(updatedSlotAssignments, crewPolicy)
+      activate slot
+      slot -->> roster: missingRoles, staffRequired, isFullyStaffed
+      deactivate slot
+      roster -->> rosterUI: saved(staffingStatus)
+    else result is prevented(reason) or cancelled
+      roster -->> rosterUI: notAccepted(result)
+    end
+    deactivate roster
+
+    alt result is prevented(reason) or cancelled
+      rosterUI ->> manager: assignment not saved: reason or cancellation
+    else result is allowed
+      rosterUI -->> manager: assignment saved; slot updated;\nremaining roles require manpower
+    end
+  end
+  deactivate rosterUI
+end
+
+manager -> rosterUI: saveDraft(week)
+activate rosterUI
+rosterUI -> roster: saveDraft(week)
+activate roster
+/'
+Original SQL retained for the associated operation:
+-- Retain this week's roster as a draft
+UPDATE WeeklyRoster SET status = 'draft'
+WHERE rosterWeek = :week AND status = 'draft';
+
+-- Record saving of the current draft
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+'/
+roster -> db: saveDraftAndAudit(week, auditData)
+activate db
+note right of db
+-- Retain this week's roster as a draft
+UPDATE WeeklyRoster SET status = 'draft'
+WHERE rosterWeek = :week AND status = 'draft';
+
+-- Record saving of the current draft
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+end note
+db -->> roster: roster retained as draft; audit entry stored
+deactivate db
+roster -->> rosterUI: draftSaved(currentDraft)
+deactivate roster
+rosterUI -->> manager: weekly roster saved as draft;\nunfilled roles require manpower
+deactivate rosterUI
+@enduml

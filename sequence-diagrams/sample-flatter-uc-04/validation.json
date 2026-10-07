@@ -1,0 +1,188 @@
+{
+  "scope": "Main draft-allocation flow plus alternative 8a; broader alternatives retained in companion diagrams.",
+  "presentation": "Three core database operation calls in the main flow; original SQL in side notes and source comments.",
+  "compiler": {
+    "version": "PlantUML 1.2026.8",
+    "checkonly_exit_code": 0,
+    "svg_render_exit_code": 0,
+    "png_render_exit_code": 0
+  },
+  "sql_preservation": {
+    "original_requests_retained_in_source_comments": 17,
+    "all_original_requests_found": true,
+    "main_sql_side_notes": 3
+  },
+  "metrics": {
+    "uc-04-allocate-role": {
+      "maximum_local_control_nesting": 2,
+      "control_frames": 4,
+      "database_requests": 0,
+      "database_replies": 0,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 0,
+      "png_dimensions": [
+        1439,
+        988
+      ],
+      "svg_present": true
+    },
+    "uc-04-build-weekly-roster": {
+      "maximum_local_control_nesting": 3,
+      "control_frames": 5,
+      "database_requests": 3,
+      "database_replies": 3,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 0,
+      "png_dimensions": [
+        1903,
+        1972
+      ],
+      "svg_present": true
+    },
+    "uc-04-open-week": {
+      "maximum_local_control_nesting": 2,
+      "control_frames": 3,
+      "database_requests": 2,
+      "database_replies": 2,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 0,
+      "png_dimensions": [
+        660,
+        571
+      ],
+      "svg_present": true
+    },
+    "uc-04-remove-assignment": {
+      "maximum_local_control_nesting": 0,
+      "control_frames": 0,
+      "database_requests": 2,
+      "database_replies": 2,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 0,
+      "png_dimensions": [
+        896,
+        490
+      ],
+      "svg_present": true
+    },
+    "uc-04-save-assignment": {
+      "maximum_local_control_nesting": 0,
+      "control_frames": 0,
+      "database_requests": 2,
+      "database_replies": 2,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 0,
+      "png_dimensions": [
+        886,
+        522
+      ],
+      "svg_present": true
+    },
+    "uc-04-save-draft": {
+      "maximum_local_control_nesting": 0,
+      "control_frames": 0,
+      "database_requests": 2,
+      "database_replies": 2,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 0,
+      "png_dimensions": [
+        520,
+        386
+      ],
+      "svg_present": true
+    },
+    "uc-04-scenario-overview": {
+      "maximum_local_control_nesting": 3,
+      "control_frames": 7,
+      "database_requests": 0,
+      "database_replies": 0,
+      "activation_totals_balanced": true,
+      "breaks_at_top_level": 2,
+      "png_dimensions": [
+        1106,
+        1547
+      ],
+      "svg_present": true
+    }
+  },
+  "references": [
+    {
+      "caller": "uc-04-allocate-role",
+      "interaction": "UC-13 Check Assignment Rule",
+      "common_lifelines_covered": [
+        "ambulance",
+        "manager",
+        "roster",
+        "rosterUI",
+        "rules",
+        "staff"
+      ]
+    },
+    {
+      "caller": "uc-04-allocate-role",
+      "interaction": "UC-04 / Save accepted assignment",
+      "common_lifelines_covered": [
+        "db",
+        "roster"
+      ]
+    },
+    {
+      "caller": "uc-04-build-weekly-roster",
+      "interaction": "UC-13 Check Assignment Rule",
+      "common_lifelines_covered": [
+        "ambulance",
+        "manager",
+        "roster",
+        "rosterUI",
+        "rules",
+        "staff"
+      ]
+    },
+    {
+      "caller": "uc-04-scenario-overview",
+      "interaction": "UC-04 / Open roster",
+      "common_lifelines_covered": [
+        "db",
+        "roster"
+      ]
+    },
+    {
+      "caller": "uc-04-scenario-overview",
+      "interaction": "UC-04 / Remove draft assignment",
+      "common_lifelines_covered": [
+        "db",
+        "roster"
+      ]
+    },
+    {
+      "caller": "uc-04-scenario-overview",
+      "interaction": "UC-04 / Allocate role",
+      "common_lifelines_covered": [
+        "db",
+        "manager",
+        "roster",
+        "rosterUI"
+      ]
+    },
+    {
+      "caller": "uc-04-scenario-overview",
+      "interaction": "UC-04 / Save draft",
+      "common_lifelines_covered": [
+        "db",
+        "roster"
+      ]
+    }
+  ],
+  "instruction_update": {
+    "path": "AGENTS.md",
+    "sha256": "b63f4075a6f88c848fbbf4c3c584679b323b8b8a632c99914952139420b872c7",
+    "contradictory_sql_on_arrow_rules_removed": true
+  },
+  "visual_review": "Main flow inspected after rendering; side notes are separate from short operation labels and no clipping was observed.",
+  "limitations": [
+    "The main sample excludes published, no-eligible-ambulance, removal/replacement and unavailable-ambulance scenarios; see companion scope.",
+    "Supporting database reads are abstracted in this business-flow view; no new caching or freshness guarantee is asserted.",
+    "I02, I03 and I07 remain open.",
+    "SQL and database effects are modelled, not executed. Activation totals are a structural check; the inherited retry lifecycle was also reviewed."
+  ]
+}
