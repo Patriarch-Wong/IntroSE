@@ -46,3 +46,13 @@ PlantUML 1.2025.4 with Java:
 PLANTUML_LIMIT_SIZE=30000 plantuml -tpng uc-04-build-weekly-roster.puml
 PLANTUML_LIMIT_SIZE=30000 plantuml -tsvg uc-04-build-weekly-roster.puml
 ```
+
+## Presentation draft
+
+[View PNG](uc-04-build-weekly-roster-presentation.png) · [Edit PlantUML](uc-04-build-weekly-roster-presentation.puml)
+
+A shorter sample for presentation, modelled on the team's main-scenario reference layout: 38 messages, one loop, no nested loops. It shows the main success scenario (steps 1–10) and alternative 8a only; the full diagram above keeps 1a, 4a, 5a and 9a.
+
+- Steps 3–5 sit in `opt [starting a new allocation]` inside the loop. After an 8a rejection the next iteration skips that `opt` and goes straight back to the candidate list (step 6), so the retry needs no second loop.
+- Compared with the reference: no message numbers, SQL on Control→Database arrows instead of entity-to-database routing, replies to the Manager as outcomes rather than `display...()` calls, and an audit entry for each saved assignment. The reference's single `BEGIN ... COMMIT` draft-save transaction is not assumed.
+- The "not yet published" condition (1a) is a precondition note in this draft.
