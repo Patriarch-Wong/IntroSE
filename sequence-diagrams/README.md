@@ -10,6 +10,8 @@
 
 UC-04's latest revision is a simplified redraw with a single allocation loop and no nested loops; the [previous revision](2026-10-07_22-28-47/README.md) remains for reference. UC-13 is still invoked through the existing interaction reference. Earlier timestamped batches are historical versions.
 
+A separate [UC-04 sample following the supplied rough draft](sample-flatter-uc-04/README.md) uses three core database operations, short arrow labels and original SQL in side notes/source comments. The main-flow sample has three levels of control-flow nesting; companion diagrams retain the broader alternatives. It is a presentation sample, not a replacement for the latest version above.
+
 ## Source and reference documents
 
 - [Final Use Case.docx](../Final%20Use%20Case.docx): behavioural authority.

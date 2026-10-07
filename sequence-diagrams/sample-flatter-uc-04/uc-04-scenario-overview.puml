@@ -1,0 +1,136 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04 Build Weekly Roster
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+database "db:Database" as db #F1F5F9
+
+' Sample decomposition; behavioural scope, bindings and source mappings: README.md.
+' Database messages use the requested business-operation abstraction; see README.md.
+note over manager, db
+  Manager is logged in and selects a week
+  within the five-week planning period.
+end note
+
+manager -> rosterUI: openAllocation(week)
+activate rosterUI
+rosterUI -> roster: openWeek(week)
+activate roster
+ref over roster, db
+  UC-04 / Open roster
+  rosterView = loadWeek(week)
+end ref
+roster -->> rosterUI: rosterView
+deactivate roster
+alt roster status is published
+  rosterUI -->> manager: published roster; amendments use UC-06
+else roster status is draft
+  rosterUI -->> manager: draft slots, assignments, availability\nand roles requiring manpower
+end
+deactivate rosterUI
+
+' This top-level break ends the enclosing UC-04 interaction, not a loop operand.
+' The behaviour note extends the frame across all four enclosing lifelines.
+break roster status is published
+  note over manager, db
+    Further changes continue through UC-06 Amend Published Roster.
+  end note
+end
+
+' The first-selection condition is true on entry for each requested allocation.
+' Sample 4a path: after an empty result the Manager elects to select another slot.
+loop Manager continues allocation and no invalid-ambulance warning
+  loop first selection for this allocation or eligibleAmbulanceRecords is empty
+    manager -> rosterUI: selectSlot(shiftId, slotSelection)
+    activate rosterUI
+    rosterUI -> roster: selectSlot(shiftId, slotSelection)
+    activate roster
+    ' Supporting eligibility retrieval is abstracted; its original SQL is retained below.
+    roster -->> rosterUI: eligibleAmbulanceRecords[]
+    deactivate roster
+    alt eligibleAmbulanceRecords is empty
+      rosterUI -->> manager: no eligible ambulance; another shift or slot may be selected
+    else eligibleAmbulanceRecords is not empty
+      rosterUI -->> manager: active, available ambulances with no other same-shift slot
+    end
+    deactivate rosterUI
+  end
+
+  alt Manager chooses to remove an existing assignment
+    manager -> rosterUI: removeAssignedRole(assignmentId)
+    activate rosterUI
+    rosterUI -> roster: removeDraftAssignment(assignmentId)
+    activate roster
+    ref over roster, db
+      UC-04 / Remove draft assignment
+      staffingStatus = removeExisting(assignmentId, workingContext)
+    end ref
+    roster -->> rosterUI: removed(staffingStatus)
+    deactivate roster
+    rosterUI -->> manager: assignment removed and change saved;\nreleased roles require manpower
+    deactivate rosterUI
+  else Manager fills a role or replaces an assignment
+    ref over manager, rosterUI, roster, db
+      UC-04 / Allocate role
+      outcome = allocateRole(slotSelection, eligibleAmbulanceRecords, workingContext)
+    end ref
+  end
+end
+
+' Preserve I07's warning stop, without inventing detection or recovery.
+' This break is outside the allocation loop and spans the enclosing interaction.
+break invalid-ambulance warning was presented
+  note over manager, db
+    The draft contains an invalid ambulance assignment.
+  end note
+end
+
+manager -> rosterUI: saveDraft(week)
+activate rosterUI
+rosterUI -> roster: saveDraft(week)
+activate roster
+ref over roster, db
+  UC-04 / Save draft
+  currentDraft = retainDraft(week, workingContext)
+end ref
+roster -->> rosterUI: draftSaved(currentDraft)
+deactivate roster
+rosterUI -->> manager: weekly roster saved as draft;\nunfilled roles require manpower
+deactivate rosterUI
+/'
+Original SQL retained for the associated operation:
+-- Find eligible ambulances for this shift and slot
+SELECT a.ambulanceNumber
+FROM Ambulance a JOIN AmbulanceAvailability u
+  ON u.ambulanceNumber = a.ambulanceNumber
+WHERE a.activeStatus = 'active' AND u.shiftID = :shiftId
+  AND u.available = TRUE AND NOT EXISTS
+  (SELECT 1 FROM RosterSlot r
+   WHERE r.ambulanceNumber = a.ambulanceNumber
+     AND r.shiftID = :shiftId
+     AND (:slotId IS NULL OR r.slotID <> :slotId));
+'/
+@enduml

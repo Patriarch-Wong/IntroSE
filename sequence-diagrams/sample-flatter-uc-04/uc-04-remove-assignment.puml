@@ -1,0 +1,70 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04 Build Weekly Roster
+
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "slot:RosterSlot" as slot <<entity>> #EDF6EC
+participant "assignment:Assignment" as assignment <<entity>> #EDF6EC
+participant "audit:AuditEntry" as audit <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+
+' Sample decomposition; behavioural scope, bindings and source mappings: README.md.
+' Database messages use the requested business-operation abstraction; see README.md.
+note over roster, db
+  The Manager chose an existing draft assignment to remove.
+end note
+activate roster
+roster -> assignment: remove(null)
+activate assignment
+assignment -->> roster: removalChange
+deactivate assignment
+roster -> db: saveStaffAssignment(removalChange)
+activate db
+db -->> roster: assignment removed
+deactivate db
+roster -> slot: staffingStatus(remainingSlotAssignments, crewPolicy)
+activate slot
+slot -->> roster: missingRoles, staffRequired, isFullyStaffed
+deactivate slot
+roster -> audit: recordChange("draft assignment removed", actor, time,\npreviousAssignment, null, null)
+activate audit
+audit -->> roster: auditData
+deactivate audit
+roster -> db: saveAuditRecord(auditData)
+activate db
+db -->> roster: assignment-removal audit entry stored
+deactivate db
+deactivate roster
+/'
+Original SQL retained for the associated operation:
+-- Remove the staff assignment from this slot
+DELETE FROM Assignment
+WHERE assignmentID = :assignmentId AND slotID = :slotId;
+
+-- Record removal of the draft assignment
+INSERT INTO AuditEntry
+(actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, :reason);
+'/
+@enduml
