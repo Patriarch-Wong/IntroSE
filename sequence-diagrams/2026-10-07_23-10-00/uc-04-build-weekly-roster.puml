@@ -1,0 +1,185 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 560
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04: Build Weekly Roster
+
+' Simplified revision: one allocation loop, no nested loops.
+' Scope: main success scenario and alternatives 1a, 4a, 5a, 8a, 9a.
+' Step mapping, SQL mapping assumptions and open issues are in README.md.
+' SQL is illustrative PostgreSQL.
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "rules:AssignmentRuleControl" as rules <<control>> #FFF3DA
+participant "staff:Staff" as staff <<entity>> #EDF6EC
+participant "ambulance:Ambulance" as ambulance <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+
+note over manager, roster
+  Manager is logged in and begins or continues planning
+  a week within the five-week planning period.
+end note
+
+' Main 1-2.
+manager -> rosterUI: openAllocation(week)
+activate rosterUI
+rosterUI -> roster: openWeek(week)
+activate roster
+roster -> db: -- Retrieve the week's roster with its slots and assignments\nSELECT * FROM WeekPlanningView\nWHERE rosterWeek = :week;
+activate db
+db -->> roster: weekPlanningRecord (status, slots, assignments,\nroles requiring manpower) or none
+deactivate db
+opt no roster exists for the week
+  roster -> db: -- Create an empty draft roster for the week\nINSERT INTO WeeklyRoster (rosterWeek, status)\nVALUES (:week, 'draft');
+  activate db
+  db -->> roster: empty draft roster stored
+  deactivate db
+end
+roster -->> rosterUI: rosterView
+deactivate roster
+
+alt roster status is published
+  ' Alternative 1a: UC-04 ends here.
+  rosterUI -->> manager: published roster; changes continue through\nUC-06 Amend Published Roster
+  deactivate rosterUI
+else roster status is draft
+  rosterUI -->> manager: draft slots, ambulances, assigned staff\nand roles requiring manpower
+  deactivate rosterUI
+
+  ' Main 3-9 and 10 (repeat). Each operand is one Manager request; an
+  ' operand only becomes available once its earlier step has been shown.
+  loop Manager continues allocating
+    alt Manager selects a shift and slot
+      ' Main 3-4; alternative 4a.
+      manager -> rosterUI: selectSlot(shiftId, slotId)
+      activate rosterUI
+      rosterUI -> roster: selectSlot(shiftId, slotId)
+      activate roster
+      roster -> db: -- Find active, available ambulances not used by another slot in this shift\nSELECT a.ambulanceNumber FROM Ambulance a\nJOIN AmbulanceAvailability u ON u.ambulanceNumber = a.ambulanceNumber\nWHERE a.activeStatus = 'active' AND u.shiftID = :shiftId AND u.available\n  AND NOT EXISTS (SELECT 1 FROM RosterSlot r\n    WHERE r.ambulanceNumber = a.ambulanceNumber\n      AND r.shiftID = :shiftId AND r.slotID <> :slotId);
+      activate db
+      db -->> roster: eligibleAmbulances[]
+      deactivate db
+      roster -->> rosterUI: eligibleAmbulances[]
+      deactivate roster
+      alt eligibleAmbulances is empty
+        rosterUI -->> manager: no eligible ambulance;\nanother shift or slot may be selected
+      else eligibleAmbulances is not empty
+        rosterUI -->> manager: eligible ambulances for the slot
+      end
+      deactivate rosterUI
+
+    else eligible ambulances shown and Manager chooses an ambulance and role to fill or replace
+      ' Main 5-6; alternative 5a1/5a3 (replacedAssignmentId given).
+      manager -> rosterUI: chooseRole(ambulanceId, role,\nreplacedAssignmentId?)
+      activate rosterUI
+      rosterUI -> roster: listCandidates(selection)
+      activate roster
+      roster -> db: -- Retrieve up to three suitable candidates with their assigned hours\nSELECT staffID, availability, assignedHours,\n  jobPreference, datedLocation\nFROM CandidateOption\nWHERE rosterWeek = :week AND shiftID = :shiftId AND role = :role\nFETCH FIRST 3 ROWS ONLY;
+      activate db
+      db -->> roster: candidateRecords[] (up to three)
+      deactivate db
+      roster -->> rosterUI: candidateView
+      deactivate roster
+      rosterUI -->> manager: up to three candidates: availability,\nassigned hours, job preference and location
+      deactivate rosterUI
+
+    else Manager removes an assigned staff member
+      ' Alternative 5a1-5a2.
+      manager -> rosterUI: removeAssignment(assignmentId)
+      activate rosterUI
+      rosterUI -> roster: removeAssignment(assignmentId)
+      activate roster
+      roster -> db: -- Remove the staff member from this role\nDELETE FROM Assignment\nWHERE assignmentID = :assignmentId;
+      activate db
+      db -->> roster: assignment removed
+      deactivate db
+      roster -> db: -- Record the removal in the audit log\nINSERT INTO AuditEntry (actingUser, timestamp,\n  previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, NULL, 'removed');
+      activate db
+      db -->> roster: removal audit entry stored
+      deactivate db
+      roster -->> rosterUI: removed(role)
+      deactivate roster
+      rosterUI -->> manager: assignment removed;\nrole requires manpower
+      deactivate rosterUI
+
+    else candidates shown and Manager selects a candidate
+      ' Main 7-9; alternatives 8a and 9a.
+      manager -> rosterUI: selectCandidate(staffId)
+      activate rosterUI
+      rosterUI -> roster: assignCandidate(staffId, selection)
+      activate roster
+      roster -> db: -- Retrieve the rule context and the ambulance's current availability\nSELECT * FROM StaffRuleContext\nWHERE staffID = :staffId AND rosterWeek = :week\n  AND shiftID = :shiftId AND ambulanceNumber = :ambulanceId;
+      activate db
+      db -->> roster: ruleContextRecord (qualifications, commitments,\nshift times, ambulance availability)
+      deactivate db
+      ref over manager, rosterUI, roster, rules, staff, ambulance
+        UC-13 Check Assignment Rule
+        result = checkAssignment(proposal, context)
+        baseControl = roster:RosterControl
+      end ref
+      alt result is allowed and ambulance is still available
+        ' Main 9: save the assignment, update the slot, audit the change.
+        roster -> db: -- Store the slot's ambulance for this shift\nINSERT INTO RosterSlot (slotID, rosterWeek, shiftID, ambulanceNumber)\nVALUES (:slotId, :week, :shiftId, :ambulanceId)\nON CONFLICT (slotID) DO UPDATE SET ambulanceNumber = :ambulanceId;
+        activate db
+        db -->> roster: slot's ambulance stored
+        deactivate db
+        roster -> db: -- Save the staff assignment, replacing any staff already in the role\nINSERT INTO Assignment (assignmentID, slotID, staffID,\n  fulfilledRoles, confirmationStatus)\nVALUES (:assignmentId, :slotId, :staffId, :roles, 'confirmed')\nON CONFLICT (assignmentID) DO UPDATE SET staffID = :staffId;
+        activate db
+        db -->> roster: staff assignment saved for the role
+        deactivate db
+        roster -> db: -- Record the assignment change in the audit log\nINSERT INTO AuditEntry (actingUser, timestamp,\n  previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, NULL);
+        activate db
+        db -->> roster: assignment audit entry stored
+        deactivate db
+        roster -->> rosterUI: saved(updatedSlot)
+        rosterUI -->> manager: assignment saved; slot updated;\nremaining roles requiring manpower shown
+      else result is allowed but ambulance has been made unavailable
+        ' Alternative 9a: nothing is saved.
+        roster -->> rosterUI: invalidAmbulance(slot)
+        rosterUI -->> manager: draft contains an invalid ambulance assignment
+      else result is prevented or cancelled
+        ' Alternative 8a: nothing is saved; candidates stay shown (back to step 6).
+        roster -->> rosterUI: notAccepted(reason)
+        rosterUI -->> manager: assignment not saved: reason;\ncandidates shown again
+      end
+      deactivate roster
+      deactivate rosterUI
+    end
+  end
+
+  ' Main 10: save the current roster as a draft.
+  manager -> rosterUI: saveDraft(week)
+  activate rosterUI
+  rosterUI -> roster: saveDraft(week)
+  activate roster
+  roster -> db: -- Keep this week's roster saved as a draft\nUPDATE WeeklyRoster SET status = 'draft'\nWHERE rosterWeek = :week;
+  activate db
+  db -->> roster: roster retained as draft
+  deactivate db
+  roster -->> rosterUI: draftSaved
+  deactivate roster
+  rosterUI -->> manager: roster saved as draft;\nunfilled roles require manpower
+  deactivate rosterUI
+end
+@enduml

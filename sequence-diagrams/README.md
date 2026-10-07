@@ -5,10 +5,10 @@
 | Use case | Diagram | Editable source | Design and review notes |
 |---|---|---|---|
 | UC-02 Manage Availability | [SVG](2026-10-07_21-35-15/uc-02-manage-availability.svg) · [PNG](2026-10-07_21-35-15/uc-02-manage-availability.png) | [PlantUML](2026-10-07_21-35-15/uc-02-manage-availability.puml) | [Batch notes](2026-10-07_21-35-15/README.md) |
-| UC-04 Build Weekly Roster | [SVG](2026-10-07_22-28-47/uc-04-build-weekly-roster.svg) · [PNG](2026-10-07_22-28-47/uc-04-build-weekly-roster.png) | [PlantUML](2026-10-07_22-28-47/uc-04-build-weekly-roster.puml) | [Retry revision](2026-10-07_22-28-47/README.md) · [Validation](2026-10-07_22-28-47/validation-report.md) |
+| UC-04 Build Weekly Roster | [SVG](2026-10-07_23-10-00/uc-04-build-weekly-roster.svg) · [PNG](2026-10-07_23-10-00/uc-04-build-weekly-roster.png) | [PlantUML](2026-10-07_23-10-00/uc-04-build-weekly-roster.puml) | [Simplified revision](2026-10-07_23-10-00/README.md) |
 | UC-13 Check Assignment Rule | [SVG](2026-10-07_21-35-15/uc-13-check-assignment-rule.svg) · [PNG](2026-10-07_21-35-15/uc-13-check-assignment-rule.png) | [PlantUML](2026-10-07_21-35-15/uc-13-check-assignment-rule.puml) | [Batch notes](2026-10-07_21-35-15/README.md) |
 
-UC-04's latest revision moves candidate retrieval/display into one retry loop matching alternative 8a's return to step 6. UC-13 is still invoked through the existing interaction reference. Earlier timestamped batches are historical versions.
+UC-04's latest revision is a simplified redraw with a single allocation loop and no nested loops; the [previous revision](2026-10-07_22-28-47/README.md) remains for reference. UC-13 is still invoked through the existing interaction reference. Earlier timestamped batches are historical versions.
 
 ## Source and reference documents
 
