@@ -11,7 +11,8 @@ Both follow the AGENTS.md revision on main (`b723731`): short business-operation
 
 | Diagram | Messages | Max nesting | Deepest path |
 |---|---|---|---|
-| UC-04 Build Weekly Roster | 32 | 3 | loop → alt (Manager request) → alt (empty ambulances / UC-13 result) |
+| UC-04 Build Weekly Roster | 23 | 3 | loop → alt (Manager request) → alt (UC-13 result) |
+| UC-04 Prepare Allocation | 9 | 1 | break (no eligible ambulance) |
 | UC-04 Remove Draft Assignment | 6 | 0 | none |
 | UC-02 Manage Availability | 18 | 1 | loop (each submitted week); opt (late) |
 
@@ -19,23 +20,22 @@ Traced paths: UC-04 published (break ends the interaction before allocation and 
 
 ## UC-04 Build Weekly Roster
 
-**Scope:** main success scenario and alternatives 1a, 4a, 5a, 8a and 9a, across two diagrams. 1a is a top-level `break` at the decision point, so the allocation flow is not wrapped in a draft-only branch. Removal (5a1–5a2) is extracted to [UC-04 Remove Draft Assignment](uc-04-remove-assignment.svg) ([source](uc-04-remove-assignment.puml)), called through `ref` with `assignmentId` in and "role requires manpower" out. One allocation loop; each pass is one Manager request chosen from a flat `alt`. A request is only offered once its earlier step has been shown, so 4a cannot reach candidate allocation and 8a returns to the candidates already shown (step 6) on the next pass.
+**Scope:** main success scenario and alternatives 1a, 4a, 5a, 8a and 9a, across two diagrams. 1a is a top-level `break` at the decision point, so the allocation flow is not wrapped in a draft-only branch. Two coherent pieces are extracted and called through `ref`: [UC-04 Prepare Allocation](uc-04-prepare-allocation.svg) ([source](uc-04-prepare-allocation.puml)) for steps 3–6 with 4a and the replacement entry (5a1/5a3), ending with candidates shown or "no eligible ambulance"; and [UC-04 Remove Draft Assignment](uc-04-remove-assignment.svg) ([source](uc-04-remove-assignment.puml)) for 5a1–5a2. The main diagram keeps the loop, the UC-13 reference, every assignment outcome and the three core database operations. One allocation loop; each pass is one Manager request chosen from a flat `alt`. A request is only offered once its earlier step has been shown, so 4a cannot reach candidate allocation and 8a returns to the candidates already shown (step 6) on the next pass.
 
 | Visible database operation | Behaviour represented | SQL |
 |---|---|---|
 | `retrieveOrCreateWeeklyRoster(week)` | Read the week's roster, create an empty draft if absent, read planning data | WeeklyRoster SELECT / INSERT in side note; WeekPlanningView SELECT in source comment |
 | `removeStaffAssignment(assignmentId, auditData)` (5a, referenced diagram) | Delete the assignment and record the removal | DELETE and AuditEntry INSERT in side note |
 | `saveStaffAssignment(proposal, auditData)` | Store or replace the assignment, store the slot's ambulance, record the change | Assignment upsert in side note; RosterSlot upsert and AuditEntry INSERT in source comments |
-| `saveDraftAndAudit(week, auditData)` | Retain draft status and record the draft save | UPDATE and AuditEntry INSERT in side note |
+| `saveDraftAndAudit(week, auditData)` | Retain draft status and record the draft save | UPDATE in side note; AuditEntry INSERT in source comment |
 
-Supporting reads (eligible ambulances, candidates with assigned hours, rule context with the ambulance's current availability) are not drawn as round trips; their SQL is in source comments beside `selectSlot`, `listCandidates` and `assignCandidate`.
+Supporting reads (eligible ambulances, candidates with assigned hours, rule context with the ambulance's current availability) are not drawn as round trips; their SQL is in source comments beside `selectSlot` and `listCandidates` (Prepare Allocation) and `assignCandidate` (main diagram).
 
 | Source step | Diagram |
 |---|---|
 | 1–2 | `openAllocation`, `retrieveOrCreateWeeklyRoster` |
 | 1a | `break [roster status is published]`; use case ends |
-| 3–4, 4a | Loop operand "selects a shift and slot"; inner `alt` on empty result |
-| 5–6, 5a3 | Loop operand "chooses a role to fill or replace" |
+| 3–6, 4a, 5a3 | Loop operand "selects a slot, ambulance and role"; `ref` UC-04 Prepare Allocation (4a is a `break` inside it) |
 | 5a1–5a2 | Loop operand "removes an assigned staff member"; `ref` UC-04 Remove Draft Assignment |
 | 7–8 | Loop operand "selects a candidate"; `ref` UC-13 |
 | 9 / 9a / 8a | Inner `alt`: saved / invalid ambulance warning / not saved |
