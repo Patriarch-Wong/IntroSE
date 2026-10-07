@@ -1,0 +1,62 @@
+Field | Details
+ID | UC-04
+Name | Build Weekly Roster
+Description | The manager builds the weekly roster by assigning staff to roles in slots, where each slot is one ambulance for one 12-hour shift.
+Primary Actor | Manager
+Secondary Actor(s) | Database
+Related Requirements | FR-02, FR-06, FR-07, FR-09, FR-22, FR-23, FR-29, NFR-03, NFR-06, NFR-07
+Relationships | Includes UC-13 Check Assignment Rule.
+Preconditions | The manager is logged in.
+Trigger | The manager begins or continues planning a roster week.
+Main Success Scenario | 1. The manager opens the roster allocation page and selects a roster week within the five-week planning period.
+
+2. The system retrieves the draft roster for the selected week or creates an empty draft roster if none exists, then displays the roster slots, assigned ambulances, assigned staff, and roles still requiring manpower.
+
+3. The manager selects a shift and roster slot to work on.
+
+4. The system displays ambulances that are active, available for the selected shift, and not assigned to another roster slot in the same shift.
+
+5. The manager selects an ambulance and a crew role to fill.
+
+6. The system displays up to three suitable staff candidates, showing each candidate’s availability, assigned hours, job preference, and location for that date.
+
+7. The manager selects a candidate.
+
+8. The system validates the proposed staff assignment through UC-13 Check Assignment Rule.
+
+9. The system saves the assignment, updates the roster slot, and records the change in the audit log.
+
+10. The manager repeats the allocation process as required and saves the current roster as a draft.
+Alternative Scenarios | 1a. The roster for the selected week has already been published.
+ 1a1. The system retrieves and displays the published roster.
+ 1a2. Any changes to the published roster are made through UC-06 Amend Published Roster.
+ 1a3. This use case ends.
+
+4a. No eligible ambulance is available for the selected shift.
+ 4a1. The system informs the manager that no eligible ambulance is available.
+ 4a2. The manager may select another shift or roster slot.
+
+5a. The manager modifies an existing staff assignment in the draft roster.
+ 5a1. The manager selects an assigned role and chooses to remove or replace the assigned staff member.
+ 5a2. If removed, the system marks the role as requiring manpower and saves the change.
+ 5a3. If replaced, the use case continues at step 6.
+
+8a. The proposed staff assignment is not accepted through UC-13.
+ 8a1. The assignment is not saved.
+ 8a2. The system displays the relevant reason or outcome.
+ 8a3. The use case returns to step 6.
+
+9a. The ambulance is made unavailable.
+ 9a1. The system notifies the manager that the draft contains an invalid ambulance assignment.
+Postconditions | The current weekly roster is stored as a draft.
+
+Each roster slot uses an ambulance that is active, available for the shift, and not assigned to another roster slot during the same shift.
+
+Valid staff assignments are stored against their corresponding roster slots and crew roles.
+
+Any roles that remain unfilled are identified as requiring manpower.
+
+Staff availability for the selected roster week has been made available to the manager to support roster allocation decisions; no staff availability records are modified by this use case.
+
+Changes made to the draft roster are recorded in the audit log.
+Priority | High

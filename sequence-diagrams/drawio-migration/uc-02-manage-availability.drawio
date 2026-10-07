@@ -1,0 +1,492 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="Native UML migration" version="29.0.0" type="device">
+  <diagram id="uc-02-manage-availability" name="UC-02 Manage Availability">
+    <mxGraphModel dx="1200" dy="850" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="2035" pageHeight="2196" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="shape-1" value="loop" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="73" umlKind="loop">
+          <mxGeometry x="25" y="899" width="1984.845" height="307" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-2" value="loop" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="87" umlKind="loop">
+          <mxGeometry x="25" y="1222" width="1984.845" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-3" value="opt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="112" umlKind="opt">
+          <mxGeometry x="25" y="1858" width="1984.845" height="184" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-staffActor" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="157.396" y="68" width="100" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-4" value="Staff" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fontFamily=Arial;fontSize=14;fillColor=#FFFFFF;strokeColor=#263238;" parent="participant-staffActor" vertex="1">
+          <mxGeometry x="34.0" y="0" width="32" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-staffActor" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-staffActor" vertex="1">
+          <mxGeometry x="50.0" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-planningUI" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="357.275" y="68" width="231.4" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-5" value="«boundary»&#10;planning:StaffPlanningBoundary" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EAF4FB;strokeColor=#455A64;" parent="participant-planningUI" vertex="1">
+          <mxGeometry x="0" y="16" width="231.4" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-planningUI" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-planningUI" vertex="1">
+          <mxGeometry x="115.7" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-planning" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="618.675" y="68" width="220.8" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-6" value="«control»&#10;planning:StaffPlanningControl" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#FFF3DA;strokeColor=#455A64;" parent="participant-planning" vertex="1">
+          <mxGeometry x="0" y="16" width="220.8" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-planning" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-planning" vertex="1">
+          <mxGeometry x="110.4" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-availability" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="918.845" y="68" width="210.2" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-7" value="«entity»&#10;availability:StaffAvailability" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EDF6EC;strokeColor=#455A64;" parent="participant-availability" vertex="1">
+          <mxGeometry x="0" y="16" width="210.2" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-availability" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-availability" vertex="1">
+          <mxGeometry x="105.1" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-audit" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="1159.045" y="68" width="136.6" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-8" value="«entity»&#10;audit:AuditEntry" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EDF6EC;strokeColor=#455A64;" parent="participant-audit" vertex="1">
+          <mxGeometry x="0" y="16" width="136.6" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-audit" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-audit" vertex="1">
+          <mxGeometry x="68.3" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-db" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="1325.645" y="68" width="106.6" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-9" value="db:Database" style="shape=cylinder;html=0;size=12;boundedLbl=1;verticalLabelPosition=bottom;verticalAlign=top;align=center;fontFamily=Arial;fontSize=14;fillColor=#F1F5F9;strokeColor=#455A64;" parent="participant-db" vertex="1">
+          <mxGeometry x="23.3" y="0" width="60" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-db" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-db" vertex="1">
+          <mxGeometry x="53.3" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-notifications" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="1462.245" y="68" width="252.6" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-10" value="«boundary»&#10;notifications:NotificationBoundary" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EAF4FB;strokeColor=#455A64;" parent="participant-notifications" vertex="1">
+          <mxGeometry x="0" y="16" width="252.6" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-notifications" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-notifications" vertex="1">
+          <mxGeometry x="126.3" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-manager" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="1744.845" y="68" width="100" height="2128" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-11" value="Manager" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fontFamily=Arial;fontSize=14;fillColor=#FFFFFF;strokeColor=#263238;" parent="participant-manager" vertex="1">
+          <mxGeometry x="34.0" y="0" width="32" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-manager" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-manager" vertex="1">
+          <mxGeometry x="50.0" y="86" width="1" height="2026" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-12" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-db" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="428" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-13" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-planning" vertex="1" umlKind="execution">
+          <mxGeometry x="105.4" y="284" width="10" height="242" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-14" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-planningUI" vertex="1" umlKind="execution">
+          <mxGeometry x="110.7" y="235" width="10" height="359" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-15" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-planningUI" vertex="1" umlKind="execution">
+          <mxGeometry x="110.7" y="643" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-16" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-planning" vertex="1" umlKind="execution">
+          <mxGeometry x="110.4" y="924" width="10" height="71" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-17" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-availability" vertex="1" umlKind="execution">
+          <mxGeometry x="100.1" y="1063" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-18" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-db" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="1339" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-19" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-audit" vertex="1" umlKind="execution">
+          <mxGeometry x="63.3" y="1476" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-20" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-db" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="1631" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-21" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-notifications" vertex="1" umlKind="execution">
+          <mxGeometry x="121.3" y="1861" width="10" height="87" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-22" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-planning" vertex="1" umlKind="execution">
+          <mxGeometry x="105.4" y="809" width="10" height="1208" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-23" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-planningUI" vertex="1" umlKind="execution">
+          <mxGeometry x="110.7" y="741" width="10" height="1325" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-24" value="UC-02: Manage Availability" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontSize=20;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="25" y="15" width="1984.845" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-25" value="Staff is logged in and edits their own availability.&#10;Planning period: five weeks of 12-hour day/night shifts." style="shape=note;size=12;html=0;whiteSpace=wrap;fillColor=#FFFBEA;strokeColor=#C8BE8A;fontFamily=Arial;fontSize=14;align=left;verticalAlign=middle;spacing=12;" parent="1" vertex="1">
+          <mxGeometry x="381.025" y="188" width="440" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="message-26-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staffActor" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="235" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-26-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="110.7" y="235" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-26" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-26-source" target="message-26-target" sourceLine="44" sourceParticipant="staffActor" targetParticipant="planningUI" umlKind="synchronous" originalMessage="openAvailability()">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-26-label" value="openAvailability()" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-26" vertex="1">
+          <mxGeometry x="0" y="0" width="241.579" height="19" relative="1" as="geometry">
+            <mxPoint x="-118.28950000000003" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-27-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="120.7" y="284" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="105.4" y="284" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-27-source" target="message-27-target" sourceLine="46" sourceParticipant="planningUI" targetParticipant="planning" umlKind="synchronous" originalMessage="openAvailability(staffId)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27-label" value="openAvailability(staffId)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-27" vertex="1">
+          <mxGeometry x="0" y="0" width="232.1" height="19" relative="1" as="geometry">
+            <mxPoint x="-116.05000000000007" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-28-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="428" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-28-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-db" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="428" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-28" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-28-source" target="message-28-target" sourceLine="48" sourceParticipant="planning" targetParticipant="db" umlKind="synchronous" originalMessage="-- Retrieve saved availability and planning shifts&#10;SELECT s.*, a.available, a.lateFlag&#10;FROM Shift s LEFT JOIN StaffAvailability a&#10;ON a.shiftID = s.shiftID AND a.staffID = :staffId&#10;WHERE s.date &gt;= :windowStart&#10;AND s.date &lt; :windowEnd;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-28-label" value="-- Retrieve saved availability and planning shifts&#10;SELECT s.*, a.available, a.lateFlag&#10;FROM Shift s LEFT JOIN StaffAvailability a&#10;ON a.shiftID = s.shiftID AND a.staffID = :staffId&#10;WHERE s.date &gt;= :windowStart&#10;AND s.date &lt; :windowEnd;" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-28" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="114" relative="1" as="geometry">
+            <mxPoint x="-312.93499999999995" y="-122" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-29-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-db" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="477" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-29-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="477" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-29" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-29-source" target="message-29-target" sourceLine="50" sourceParticipant="db" targetParticipant="planning" umlKind="reply" originalMessage="shiftAvailabilityRecords[]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-29-label" value="shiftAvailabilityRecords[]" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-29" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-312.93499999999995" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-30-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="105.4" y="526" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="120.7" y="526" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-30-source" target="message-30-target" sourceLine="52" sourceParticipant="planning" targetParticipant="planningUI" umlKind="reply" originalMessage="availabilityView">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30-label" value="availabilityView" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-30" vertex="1">
+          <mxGeometry x="0" y="0" width="232.1" height="19" relative="1" as="geometry">
+            <mxPoint x="-116.05000000000007" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-31-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="110.7" y="594" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-31-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staffActor" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="594" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-31" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-31-source" target="message-31-target" sourceLine="54" sourceParticipant="planningUI" targetParticipant="staffActor" umlKind="reply" originalMessage="saved availability and selectable shifts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-31-label" value="saved availability and selectable&#10;shifts" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-31" vertex="1">
+          <mxGeometry x="0" y="0" width="241.579" height="38" relative="1" as="geometry">
+            <mxPoint x="-118.28950000000003" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-32-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staffActor" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="643" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-32-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="110.7" y="643" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-32" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-32-source" target="message-32-target" sourceLine="58" sourceParticipant="staffActor" targetParticipant="planningUI" umlKind="synchronous" originalMessage="selectAvailableShifts(shiftIds)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-32-label" value="selectAvailableShifts(shiftIds)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-32" vertex="1">
+          <mxGeometry x="0" y="0" width="241.579" height="19" relative="1" as="geometry">
+            <mxPoint x="-118.28950000000003" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-33-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="110.7" y="692" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staffActor" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="692" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-33-source" target="message-33-target" sourceLine="60" sourceParticipant="planningUI" targetParticipant="staffActor" umlKind="reply" originalMessage="selected shifts">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33-label" value="selected shifts" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-33" vertex="1">
+          <mxGeometry x="0" y="0" width="241.579" height="19" relative="1" as="geometry">
+            <mxPoint x="-118.28950000000003" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-34-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staffActor" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="741" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-34-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="110.7" y="741" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-34" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-34-source" target="message-34-target" sourceLine="62" sourceParticipant="staffActor" targetParticipant="planningUI" umlKind="synchronous" originalMessage="submitAvailability(submission)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-34-label" value="submitAvailability(submission)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-34" vertex="1">
+          <mxGeometry x="0" y="0" width="241.579" height="19" relative="1" as="geometry">
+            <mxPoint x="-118.28950000000003" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-35-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="120.7" y="809" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-35-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="105.4" y="809" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-35" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-35-source" target="message-35-target" sourceLine="64" sourceParticipant="planningUI" targetParticipant="planning" umlKind="synchronous" originalMessage="saveAvailability(staffId, submission)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-35-label" value="saveAvailability(staffId,&#10;submission)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-35" vertex="1">
+          <mxGeometry x="0" y="0" width="232.1" height="38" relative="1" as="geometry">
+            <mxPoint x="-116.05000000000007" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-36" value="[each submitted roster week]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="101" y="903" width="1894.845" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-37-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="902" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-37-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="924" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-37" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-37-source" target="message-37-target" sourceLine="74" sourceParticipant="planning" targetParticipant="planning" umlKind="synchronous" originalMessage="checkCutoff(week, submittedAt, cutoffPolicy)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="767.075" y="970" />
+              <mxPoint x="767.075" y="992" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-37-label" value="checkCutoff(week, submittedAt, cutoffPolicy)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-37" vertex="1">
+          <mxGeometry x="0" y="0" width="340" height="19" relative="1" as="geometry">
+            <mxPoint x="-26.0" y="-38.0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-38-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="120.4" y="973" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-38-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="995" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-38" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-38-source" target="message-38-target" sourceLine="76" sourceParticipant="planning" targetParticipant="planning" umlKind="reply" originalMessage="isLate">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="767.075" y="1041" />
+              <mxPoint x="767.075" y="1063" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-38-label" value="isLate" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-38" vertex="1">
+          <mxGeometry x="0" y="0" width="340" height="19" relative="1" as="geometry">
+            <mxPoint x="-26.0" y="-38.0" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-39-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1063" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-availability" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="100.1" y="1063" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-39-source" target="message-39-target" sourceLine="78" sourceParticipant="planning" targetParticipant="availability" umlKind="synchronous" originalMessage="prepareWeek(week, selectedShifts, isLate)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39-label" value="prepareWeek(week, selectedShifts,&#10;isLate)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-39" vertex="1">
+          <mxGeometry x="0" y="0" width="270.87" height="38" relative="1" as="geometry">
+            <mxPoint x="-135.43499999999995" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-40-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-availability" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="100.1" y="1112" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-40-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1112" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-40" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-40-source" target="message-40-target" sourceLine="80" sourceParticipant="availability" targetParticipant="planning" umlKind="reply" originalMessage="weekRecords[] with lateFlag = isLate">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-40-label" value="weekRecords[] with lateFlag = isLate" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-40" vertex="1">
+          <mxGeometry x="0" y="0" width="270.87" height="19" relative="1" as="geometry">
+            <mxPoint x="-135.43499999999995" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-41" value="[each prepared shift record]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="101" y="1226" width="1894.845" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1339" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-db" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1339" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-42-source" target="message-42-target" sourceLine="88" sourceParticipant="planning" targetParticipant="db" umlKind="synchronous" originalMessage="-- Save this shift's availability and late flag&#10;INSERT INTO StaffAvailability&#10;(staffID, shiftID, available, lateFlag)&#10;VALUES (:staffId, :shiftId, :available, :lateFlag)&#10;ON CONFLICT (staffID, shiftID) DO UPDATE&#10;SET available = EXCLUDED.available,&#10;lateFlag = EXCLUDED.lateFlag;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42-label" value="-- Save this shift's availability and late flag&#10;INSERT INTO StaffAvailability&#10;(staffID, shiftID, available, lateFlag)&#10;VALUES (:staffId, :shiftId, :available, :lateFlag)&#10;ON CONFLICT (staffID, shiftID) DO UPDATE&#10;SET available = EXCLUDED.available,&#10;lateFlag = EXCLUDED.lateFlag;" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-42" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="133" relative="1" as="geometry">
+            <mxPoint x="-312.93499999999995" y="-141" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-43-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-db" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1388" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-43-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1388" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-43" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-43-source" target="message-43-target" sourceLine="90" sourceParticipant="db" targetParticipant="planning" umlKind="reply" originalMessage="shift availability and late flag saved">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-43-label" value="shift availability and late flag saved" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-43" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-312.93499999999995" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-44-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1476" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-44-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-audit" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="63.3" y="1476" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-44" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-44-source" target="message-44-target" sourceLine="97" sourceParticipant="planning" targetParticipant="audit" umlKind="synchronous" originalMessage="recordChange(&quot;availability changed&quot;, staffId, submittedAt,&#10;previousAvailability, preparedAvailability, null)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-44-label" value="recordChange(&quot;availability changed&quot;, staffId, submittedAt,&#10;previousAvailability, preparedAvailability, null)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-44" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="38" relative="1" as="geometry">
+            <mxPoint x="-237.135" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-45-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-audit" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="63.3" y="1525" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1525" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-45-source" target="message-45-target" sourceLine="99" sourceParticipant="audit" targetParticipant="planning" umlKind="reply" originalMessage="auditData">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45-label" value="auditData" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-45" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-237.135" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-46-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1631" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-46-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-db" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1631" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-46" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-46-source" target="message-46-target" sourceLine="101" sourceParticipant="planning" targetParticipant="db" umlKind="synchronous" originalMessage="-- Store the availability-change audit entry&#10;INSERT INTO AuditEntry&#10;(actingUser, timestamp, previousValue, newValue, reason)&#10;VALUES (:actor, :time, :previous, :new, :reason);">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-46-label" value="-- Store the availability-change audit entry&#10;INSERT INTO AuditEntry&#10;(actingUser, timestamp, previousValue, newValue, reason)&#10;VALUES (:actor, :time, :previous, :new, :reason);" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-46" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="76" relative="1" as="geometry">
+            <mxPoint x="-312.93499999999995" y="-84" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-47-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-db" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1680" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-47-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1680" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-47" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-47-source" target="message-47-target" sourceLine="103" sourceParticipant="db" targetParticipant="planning" umlKind="reply" originalMessage="availability-change audit entry stored">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-47-label" value="availability-change audit entry stored" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-47" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-312.93499999999995" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-48" value="Saved availability and late flags are visible to managers.&#10;Published assignments remain unchanged." style="shape=note;size=12;html=0;whiteSpace=wrap;fillColor=#FFFBEA;strokeColor=#C8BE8A;fontFamily=Arial;fontSize=14;align=left;verticalAlign=middle;spacing=12;" parent="1" vertex="1">
+          <mxGeometry x="694.01" y="1770" width="720" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-49" value="[one or more submitted weeks are late]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="101" y="1862" width="1894.845" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-50-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="115.4" y="1861" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-50-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-notifications" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="121.3" y="1861" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-50" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-50-source" target="message-50-target" sourceLine="113" sourceParticipant="planning" targetParticipant="notifications" umlKind="asynchronous" originalMessage="notify(managerId, &quot;late availability&quot;, staffId, lateWeeks)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-50-label" value="notify(managerId, &quot;late availability&quot;, staffId, lateWeeks)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-50" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-417.7349999999999" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-51-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-notifications" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="131.3" y="1948" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-manager" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="1948" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-51-source" target="message-51-target" sourceLine="115" sourceParticipant="notifications" targetParticipant="manager" umlKind="asynchronous" originalMessage="late availability for consideration: staffId, lateWeeks">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51-label" value="late availability for&#10;consideration: staffId,&#10;lateWeeks" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-51" vertex="1">
+          <mxGeometry x="0" y="0" width="182.3" height="57" relative="1" as="geometry">
+            <mxPoint x="-93.64999999999986" y="-65" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-52-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planning" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="105.4" y="2017" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-52-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="120.7" y="2017" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-52" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-52-source" target="message-52-target" sourceLine="120" sourceParticipant="planning" targetParticipant="planningUI" umlKind="reply" originalMessage="availability saved">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-52-label" value="availability saved" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-52" vertex="1">
+          <mxGeometry x="0" y="0" width="232.1" height="19" relative="1" as="geometry">
+            <mxPoint x="-116.05000000000007" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-53-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-planningUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="110.7" y="2066" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-53-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staffActor" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="2066" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-53" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-53-source" target="message-53-target" sourceLine="122" sourceParticipant="planningUI" targetParticipant="staffActor" umlKind="reply" originalMessage="availability saved">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-53-label" value="availability saved" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-53" vertex="1">
+          <mxGeometry x="0" y="0" width="241.579" height="19" relative="1" as="geometry">
+            <mxPoint x="-118.28950000000003" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

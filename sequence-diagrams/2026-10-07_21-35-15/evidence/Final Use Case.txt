@@ -1,0 +1,559 @@
+UC-01: Manage User Account 
+
+Field | Details
+ID | UC-01
+Name | Manage User Account
+Description | The IT Administrator keeps staff and manager accounts up to date: creates an account for a new user, edits an existing account, or deactivates the account of a user who has left.
+Primary Actor | IT Administrator
+Secondary Actor(s) | Database
+Related Requirements | FR-01, NFR-07
+Preconditions | The IT Administrator is logged in.
+Trigger | HR informs the IT Administrator of a new joiner, a change to a user's details or role qualification(s), or a leaver.
+Main Success Scenario | 1. The IT Administrator opens the user accounts page and selects Create Account.
+
+2. The IT Administrator enters full name, staff ID, role qualification(s), contact details and start date.
+
+3. The system checks that all fields are complete and that the staff ID is not already in use in the database.
+
+4. The system saves the new account to the database and records the change in the audit log.
+
+5. The system displays a confirmation message.
+Alternative Scenarios | 1a. The IT Administrator edits an existing account.
+ 1a1. The IT Administrator selects the account and changes its details or role qualification(s).
+ 1a2. The system checks that all fields are complete and that the staff ID is not in use by another account.
+ 1a3. The system saves the change to the database, records the previous and new values in the audit log, and displays a confirmation message.
+
+1b. The IT Administrator deactivates an account.
+ 1b1. The IT Administrator selects the account and selects Deactivate.
+ 1b2. The system asks the IT Administrator to confirm.
+ 1b3. The system marks the account as deactivated in the database and records the change in the audit log.
+ 1b4. The user can no longer log in and is no longer listed as an assignment candidate; the user's past records are retained.
+ 1b5. The system notifies the manager of any assignments the user still holds in a draft or published roster.
+
+3a. A required field is missing.
+ 3a1. The system highlights the missing field and does not save the account.
+ 3a2. The use case returns to step 2.
+
+3b. The staff ID is already in use.
+ 3b1. The system rejects the entry and asks for a different staff ID.
+ 3b2. The use case returns to step 2.
+Postconditions | A created or edited account holds the user's current details and role qualification(s), and the user can log in.
+
+A deactivated account cannot log in and is not listed as an assignment candidate. The manager amends any assignments the user still holds through UC-04 or UC-06.
+Priority | High
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UC-02: Manage Availability 
+
+Field | Details
+ID | UC-02
+Name | Manage Availability
+Description | A staff member records or changes their own availability for individual 12-hour shifts up to five weeks ahead, so that managers can plan the roster.
+Primary Actor | Staff
+Secondary Actor(s) | Manager (notified of late changes), Database
+Related Requirements | FR-02, FR-03, FR-04, NFR-05, NFR-07
+Preconditions | The staff member is logged in.
+Trigger | The staff member wants to enter or change their availability.
+Main Success Scenario | 1. The staff member opens the availability page. 
+
+2. The system presents the staff member’s saved availability and the 12-hour day and night shifts within the five-week planning period.
+
+3. The staff member indicates the shifts they are available to work.
+
+4. The staff member submits their availability.
+
+5. The system checks the submission against the Wednesday cut-off for each submitted roster week and determines that none of the submitted availability is late.
+
+6. The system saves the submitted availability without modifying any published assignment.
+
+7. The system records the availability change in the audit log and makes the saved availability visible to managers.
+
+8. The system confirms that the availability has been saved.
+Alternative Scenarios | 5a. Availability for one or more submitted roster weeks is submitted or changed after the Wednesday cut-off.
+ 5a1. The system identifies the affected roster weeks as late.
+ 5a2. The system records the availability change in the audit log and makes the saved availability visible to managers.
+ 5a3. The system notifies the manager of the affected late submissions or changes for consideration.
+ 5a4. The use case continues at step 8 and ends.
+Postconditions | The staff member’s submitted availability is stored within the five-week planning period and is visible to managers.
+
+An audit record exists for the availability change.
+
+For late submissions or changes, the affected availability is flagged as late and the manager is notified.
+
+Published assignments remain unchanged. Any subsequent amendment requires an authorised manager through UC-06 Amend Published Roster.
+Priority | High
+
+ 
+
+UC-03: Set Job Preference 
+
+Field | Details
+ID | UC-03
+Name | Set Job Preference
+Description | A staff member records their preferred shift type and station(s) for a roster week, for the manager to see during roster allocation.
+Primary Actor | Staff
+Secondary Actor(s) | Database
+Related Requirements | FR-05
+Preconditions | The staff member is logged in.
+Trigger | The staff member wants to state preferences for a roster week.
+Main Success Scenario | 1. The staff member opens the preferences page and selects a roster week.
+
+2. The staff member chooses a preferred shift type (day or night) and preferred station(s).
+
+3. The staff member saves the preferences.
+
+4. The system saves the preferences to the database.
+Alternative Scenarios | 2a. The staff member has no preference.
+ 2a1. The staff member leaves the fields blank, and the system records no preference for that week.
+Postconditions | The preferences for the roster week are stored and shown to the manager during roster allocation.
+Priority | High
+
+
+
+UC-04: Build Weekly Roster 
+
+Field | Details
+ID | UC-04
+Name | Build Weekly Roster
+Description | The manager builds the weekly roster by assigning staff to roles in slots, where each slot is one ambulance for one 12-hour shift.
+Primary Actor | Manager
+Secondary Actor(s) | Database
+Related Requirements | FR-02, FR-06, FR-07, FR-09, FR-22, FR-23, FR-29, NFR-03, NFR-06, NFR-07
+Relationships | Includes UC-13 Check Assignment Rule.
+Preconditions | The manager is logged in.
+Trigger | The manager begins or continues planning a roster week.
+Main Success Scenario | 1. The manager opens the roster allocation page and selects a roster week within the five-week planning period.
+
+2. The system retrieves the draft roster for the selected week or creates an empty draft roster if none exists, then displays the roster slots, assigned ambulances, assigned staff, and roles still requiring manpower.
+
+3. The manager selects a shift and roster slot to work on.
+
+4. The system displays ambulances that are active, available for the selected shift, and not assigned to another roster slot in the same shift.
+
+5. The manager selects an ambulance and a crew role to fill.
+
+6. The system displays up to three suitable staff candidates, showing each candidate’s availability, assigned hours, job preference, and location for that date.
+
+7. The manager selects a candidate.
+
+8. The system validates the proposed staff assignment through UC-13 Check Assignment Rule.
+
+9. The system saves the assignment, updates the roster slot, and records the change in the audit log.
+
+10. The manager repeats the allocation process as required and saves the current roster as a draft.
+Alternative Scenarios | 1a. The roster for the selected week has already been published.
+ 1a1. The system retrieves and displays the published roster.
+ 1a2. Any changes to the published roster are made through UC-06 Amend Published Roster.
+ 1a3. This use case ends.
+
+4a. No eligible ambulance is available for the selected shift.
+ 4a1. The system informs the manager that no eligible ambulance is available.
+ 4a2. The manager may select another shift or roster slot.
+
+5a. The manager modifies an existing staff assignment in the draft roster.
+ 5a1. The manager selects an assigned role and chooses to remove or replace the assigned staff member.
+ 5a2. If removed, the system marks the role as requiring manpower and saves the change.
+ 5a3. If replaced, the use case continues at step 6.
+
+8a. The proposed staff assignment is not accepted through UC-13.
+ 8a1. The assignment is not saved.
+ 8a2. The system displays the relevant reason or outcome.
+ 8a3. The use case returns to step 6.
+
+9a. The ambulance is made unavailable.
+ 9a1. The system notifies the manager that the draft contains an invalid ambulance assignment.
+Postconditions | The current weekly roster is stored as a draft.
+
+Each roster slot uses an ambulance that is active, available for the shift, and not assigned to another roster slot during the same shift.
+
+Valid staff assignments are stored against their corresponding roster slots and crew roles.
+
+Any roles that remain unfilled are identified as requiring manpower.
+
+Staff availability for the selected roster week has been made available to the manager to support roster allocation decisions; no staff availability records are modified by this use case. 
+
+Changes made to the draft roster are recorded in the audit log.
+Priority | High
+
+
+
+UC-05: Publish Weekly Roster 
+
+Field | Details
+ID | UC-05
+Name | Publish Weekly Roster
+Description | The manager releases the weekly roster so that staff can see their assignments.
+Primary Actor | Manager
+Secondary Actor(s) | Database
+Related Requirements | FR-12, NFR-07
+Preconditions | The manager is logged in.
+
+A draft roster for the roster week has been saved (UC-04).
+Trigger | The manager has finished planning the roster week.
+Main Success Scenario | 1. The manager selects Publish for the roster week.
+
+2. The system retrieves the draft roster from the database and checks that every shift in the roster week has at least six fully staffed* and available ambulances.
+
+3. The system marks the roster as published in the database and records the event in the audit log.
+
+4. The system makes each assignment visible to the staff member assigned (UC-09).
+Alternative Scenarios | 2a. A shift has fewer than six fully staffed* and available ambulances.
+ 2a1. The system prevents publication and displays the affected shifts, missing roles, and ambulance shortfall.
+ 2a2. The roster stays as a draft, and the manager continues in UC-04.
+Postconditions | The roster is published and visible to the staff assigned in it.
+Priority | High
+
+
+
+UC-06: Amend Published Roster 
+
+Field | Details
+ID | UC-06
+Name | Amend Published Roster
+Description | The manager modifies or directly reassigns a job in a published roster, or leaves the role unassigned so that a standby replacement may be sought.
+Primary Actor | Manager
+Secondary Actor(s) | Staff (notified of the change), Database
+Related Requirements | FR-07, FR-13, FR-14, FR-15, FR-29, NFR-07
+Relationships | Includes UC-13 Check Assignment Rule. Extended by UC-08 Find Standby Replacement at the extension point "role left unassigned".
+Preconditions | The manager is logged in.
+
+The roster for the week has been published (UC-05).
+Trigger | An assignment in the published roster needs to change.
+Main Success Scenario | 1. The manager selects an assignment in the published roster.
+
+2. The manager chooses to reassign it.
+
+3. The system retrieves the candidates' data from the database and displays up to three suitable candidates for direct reassignment, each with their availability for the week, assigned hours, job preferences and location for that date.
+
+4. The manager selects a replacement staff member.
+
+5. The system checks the assignment (include UC-13 Check Assignment Rule).
+
+6. The manager enters a reason for the change.
+
+7. The system saves the change and the role fulfilled to the database, and records the previous value, new value, acting user, timestamp and reason in the audit log.
+
+8. The system notifies the staff member removed and the staff member added.
+Alternative Scenarios | 2a. The manager removes the staff member without selecting a replacement.
+ 2a1. The manager enters a reason for the change.
+ 2a2. The system saves the change to the database, records it in the audit log, and notifies the staff member removed.
+ 2a3. The role becomes unassigned. If fewer than six fully staffed* and available ambulances remain in that shift, the system flags the shortfall and missing roles on the roster.
+ 2a4. Extension point (role left unassigned): if the manager chooses to fill the role using a standby replacement, the manager proceeds through UC-08 Find Standby Replacement.
+
+3a. No suitable candidate is available for direct reassignment.
+ 3a1. The system informs the manager that no suitable candidate is available.
+ 3a2. The manager may leave the role unassigned and proceed through UC-08 Find Standby Replacement.
+
+5a. UC-13 prevents the assignment.
+ 5a1. The system displays the reason.
+ 5a2. The use case returns to step 4.
+
+5b. The manager cancels after the 40-hour warning in UC-13.
+ 5b1. The assignment is not made.
+ 5b2. The use case returns to step 4.
+
+7a. The ambulance assigned to the affected roster slot is made unavailable.
+ 7a1. The system flags the affected roster slot and notifies the manager that the published roster requires amendment.
+ 7a2. The roster remains published while the manager amends the affected slot
+Postconditions | The published roster reflects the change, the change is recorded in the audit log with its reason, and the affected staff are notified.
+Priority | Medium
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+UC-07: Reject Assignment 
+
+Field | Details
+ID | UC-07
+Name | Reject Assignment
+Description | A staff member rejects a job assigned to them that they cannot fulfil, after being warned to discuss it with their manager and giving a reason.
+Primary Actor | Staff
+Secondary Actor(s) | Manager (notified of the rejection), Database
+Related Requirements | FR-14, FR-16, NFR-07
+Preconditions | The staff member is logged in.
+
+The staff member has an assignment in a published roster.
+Trigger | The staff member cannot work an assigned shift.
+Main Success Scenario | 1. The staff member opens the assignment from their roster (UC-09) and selects Reject.
+
+2. The system warns the staff member to discuss the job with their manager before proceeding.
+
+3. The staff member confirms and enters a reason.
+
+4. The staff member submits the rejection.
+
+5. The system marks the role in that slot as unassigned in the database and records the rejection and reason in the audit log.
+
+6. The system notifies the manager.
+Alternative Scenarios | 3a. The staff member cancels after the warning.
+ 3a1. The assignment is unchanged.
+
+4a. No reason is entered.
+ 4a1. The system does not submit the rejection until a reason is entered.
+
+5a. Fewer than six ambulances are now fully staffed* in that shift.
+ 5a1. The system flags the shortfall and the missing roles on the roster.
+Postconditions | The role is unassigned and the manager has been notified. The manager may find a standby replacement (UC-08).
+Priority | High
+
+
+
+UC-08: Find Standby Replacement 
+
+Field | Details
+ID | UC-08
+Name | Find Standby Replacement
+Description | The manager selects an eligible standby staff member for an unassigned role in a published roster and sends them a confirmation request. The vacancy is marked as filled only after that staff member confirms (UC-14).
+Primary Actor | Manager
+Secondary Actor(s) | Staff (the replacement, who receives the confirmation request), Database
+Related Requirements | FR-07, FR-14, FR-15, FR-17, FR-18, NFR-07
+Relationships | Includes UC-13 Check Assignment Rule. Extends UC-06 Amend Published Roster at the extension point "role left unassigned".
+Preconditions | The manager is logged in.
+
+A role in a published roster is unassigned or awaiting confirmation (after UC-06, UC-07, or a declined request in UC-14).
+Trigger | The manager needs to fill a vacancy in a published roster.
+Main Success Scenario | 1. The manager selects the unfilled role.
+
+2. The system retrieves the eligible standby candidates from the database and lists them: staff who have declared availability for the shift, are qualified for the role, are not already assigned during that shift, and would have at least 12 hours of rest between duties.
+
+3. The system displays up to three of these candidates side by side, each with their availability for the week, assigned hours, job preferences and location for that date.
+
+4. The manager selects a candidate.
+
+5. The system checks the assignment (include UC-13 Check Assignment Rule).
+
+6. The system saves the assignment to the database as pending confirmation and records the change in the audit log.
+
+7. The system sends a confirmation request to the selected staff member.
+
+8. The system displays the role as awaiting confirmation. The vacancy is not yet marked as filled.
+Alternative Scenarios | 1a. A staff member has not responded to an earlier confirmation request for this role.
+ 1a1. The manager withdraws the request.
+ 1a2. The system removes the pending assignment from the database, records the change in the audit log, and notifies the staff member that the request is withdrawn.
+ 1a3. The use case continues at step 2 so the manager may select a different eligible standby candidate. 
+
+2a. No staff member is eligible.
+ 2a1. The system displays that no standby candidates are available.
+ 2a2. The role remains unassigned, and any shortfall below six fully staffed* ambulances stays flagged on the roster.
+
+5a. The proposed assignment does not proceed through UC-13. 
+ 5a1. The assignment is not made and no pending confirmation request is created. 
+ 5a2. The system displays the reason where applicable. 
+ 5a3. The use case returns to step 4.
+Postconditions | The assignment is saved as pending confirmation and the request has been sent to the staff member.
+
+The vacancy is not marked as filled until the staff member confirms (UC-14).
+Priority | High
+
+
+
+UC-09: View Own Roster 
+
+Field | Details
+ID | UC-09
+Name | View Own Roster
+Description | A staff member views their own assignments for a roster week and their total assigned hours for the calendar month.
+Primary Actor | Staff
+Secondary Actor(s) | Database
+Related Requirements | FR-24, FR-25, NFR-05, NFR-08
+Preconditions | The staff member is logged in.
+Trigger | The staff member wants to review their assignments and workload.
+Main Success Scenario | 1. The staff member opens their landing page and selects a roster week.
+
+2. The system retrieves the staff member's own assignments for that week from the database and displays them, each with the date, shift start and end times, ambulance, station, assigned role, and incoming and outgoing crew.
+
+3. The system displays the staff member's total assigned hours for the calendar month.
+Alternative Scenarios | 2a. The staff member has no assignments in the selected week.
+ 2a1. The system displays that there are no assignments for that week.
+
+3a. The staff member opens the monthly assignment view.
+ 3a1. The system displays all of the staff member's own assigned shifts for the selected calendar month, without the full team roster.
+Postconditions | The staff member has seen only their own assignments, including the crew on those assignments, and their own assigned hours.
+Priority | High
+
+
+
+UC-10: Review Staff Workload 
+
+Field | Details
+ID | UC-10
+Name | Review Staff Workload
+Description | The manager reviews staff workload on the landing page in order to spread jobs fairly.
+Primary Actor | Manager
+Secondary Actor(s) | Database
+Related Requirements | FR-19, FR-26, NFR-03
+Preconditions | The manager is logged in.
+Trigger | The manager wants to review staff workload and identify workload imbalances.
+Main Success Scenario | 1. The manager opens their landing page.
+
+2. The system retrieves the assignments from the database and displays each staff member's assigned hours for the roster week.
+
+3. The system displays the three staff members with the lowest assigned hours.
+
+4. The system highlights every staff member whose assigned hours for the roster week exceed 40 hours.
+
+5. The manager selects the monthly view, and the system displays each staff member's total assigned hours for the calendar month.
+Alternative Scenarios | 3a. Several staff members are tied at the cut-off for the three lowest values.
+ 3a1. The system includes all staff members tied at that value in the lowest-workload list.
+Postconditions | The manager has seen the current weekly and monthly workload of each staff member.
+Priority | High
+
+
+
+UC-11: View Ambulance Utilisation 
+
+Field | Details
+ID | UC-11
+Name | View Ambulance Utilisation
+Description | The manager views how ambulances are utilised and which roster slots require manpower.
+Primary Actor | Manager
+Secondary Actor(s) | Database
+Related Requirements | FR-20, FR-21, FR-22
+Preconditions | The manager is logged in.
+Trigger | The manager wants to review ambulance utilisation and manpower shortfalls.
+Main Success Scenario | 1. The manager opens the utilisation page and selects a day or a week.
+
+2. The system retrieves the roster and ambulance records from the database, then calculates and displays the scheduled utilisation of each ambulance for that period: scheduled in-service hours divided by the total shift hours, counting at most 11 in-service hours for each rostered 12-hour shift.
+
+3. The system calculates and displays the fleet utilisation for each roster shift: the number of rostered ambulances divided by the active fleet size.
+
+4. The system lists the roster slots requiring manpower, with the missing role and number of staff required.
+Alternative Scenarios | 4a. No slot requires manpower.
+ 4a1. The system displays that all slots are fully staffed*.
+Postconditions | The manager has seen the utilisation of each ambulance and of the fleet, and the slots that require manpower.
+Priority | High
+
+
+
+UC-12: Manage Ambulance Record 
+
+Field | Details
+ID | UC-12
+Name | Manage Ambulance Record
+Description | The manager keeps the ambulance records and ambulance availability up to date.
+Primary Actor | Manager
+Secondary Actor(s) | Database
+Related Requirements | FR-27, FR-28, NFR-07
+Preconditions | The manager is logged in.
+Trigger | An ambulance joins or leaves the fleet, its details change, or it is unavailable for some shifts.
+Main Success Scenario | 1. The manager opens the fleet page.
+
+2. The manager adds an ambulance record, or selects an existing record to edit, deactivate or reactivate.
+
+3. The system saves the change to the database and records it in the audit log.
+
+4. The system updates the list of active ambulances.
+Alternative Scenarios | 2a. The manager marks an ambulance as unavailable for one or more roster shifts.
+ 2a1. The system saves the unavailability to the database and records it in the audit log.
+ 2a2. The system prevents the ambulance from being assigned to those shifts.
+
+2b. The manager marks an ambulance as unavailable for roster shifts in which it already has staff assigned.
+ 2b1. The system saves the change to the database and records it in the audit log.
+ 2b2. The system prevents the ambulance from being assigned to those shifts.
+ 2b3. The system retrieves the affected assignments from the database and displays them to the manager.
+ 2b4. The manager amends them through UC-04 if the roster is a draft, or through UC-06 if it is published.
+Postconditions | The ambulance records are up to date, and an unavailable ambulance cannot be assigned to the shifts it is unavailable for.
+Priority | High
+
+
+
+UC-13: Check Assignment Rule 
+
+Field | Details
+ID | UC-13
+Name | Check Assignment Rule
+Description | The system checks a proposed assignment of a staff member to a role in a slot against the assignment rules. This use case is included by UC-04, UC-06 and UC-08 and is never started directly by an actor.
+Primary Actor | Manager (through the base use case)
+Secondary Actor(s) | None
+Related Requirements | FR-08, FR-09, FR-10, FR-11
+Relationships | Included by UC-04 Build Weekly Roster, UC-06 Amend Published Roster and UC-08 Find Standby Replacement.
+Preconditions | A base use case (UC-04, UC-06 or UC-08) has proposed a staff member for a role in a slot.
+Trigger | The manager selects a staff member for a role in a base use case.
+Main Success Scenario | 1. The system checks that the staff member is recorded as qualified for the role.
+
+2. The system checks that the staff member is not already assigned to another slot in the same shift.
+
+3. The system checks that the ambulance associated with the slot is not assigned to another roster slot in the same shift.
+
+4. The system checks that the assignment leaves the staff member at least 12 hours of rest between shifts.
+
+5. The system checks whether the assignment would take the staff member above 40 assigned hours in the roster week.
+
+6. The system allows the assignment, and the base use case continues.
+Alternative Scenarios | 1a. The staff member is not recorded as qualified for the selected role.
+ 1a1. The system prevents the assignment and returns the reason to the base use case.
+
+2a. The staff member is already assigned to another roster slot in the same shift.
+ 2a1. The system prevents the assignment and returns the reason to the base use case.
+
+3a. The ambulance associated with the roster slot is already assigned to another roster slot in the same shift.
+ 3a1. The system prevents the assignment and returns the reason to the base use case.
+
+4a. The proposed assignment would leave the staff member with less than 12 hours of rest between shifts.
+ 4a1. The system prevents the assignment and returns the reason to the base use case.
+
+5a. The assignment would take the staff member above 40 assigned hours in the roster week.
+ 5a1. The system warns the manager on screen without blocking.
+ 5a2. The manager confirms (continue at step 6) or cancels (the assignment is not made).
+Postconditions | The base use case knows whether the assignment is allowed or prevented, and why.
+Priority | High
+
+
+
+UC-14: Confirm Replacement Assignment 
+
+Field | Details
+ID | UC-14
+Name | Confirm Replacement Assignment
+Description | A staff member who has been selected as a standby replacement confirms or declines the request. The vacancy is marked as filled only when the staff member confirms.
+Primary Actor | Staff
+Secondary Actor(s) | Manager (notified if the request is declined), Database
+Related Requirements | FR-18, FR-29, NFR-07
+Preconditions | The staff member is logged in.
+
+The staff member has a pending confirmation request (UC-08).
+Trigger | The staff member receives a confirmation request.
+Main Success Scenario | 1. The staff member opens the pending confirmation request.
+
+2. The system retrieves the pending assignment from the database and displays its date, shift start and end times, ambulance, station and role.
+
+3. The staff member confirms the assignment.
+
+4. The system saves the assignment and the role fulfilled to the database, marks the vacancy as filled, and records the change in the audit log.
+
+5. The system displays a confirmation message and notifies the manager. The assignment appears in the staff member's roster (UC-09).
+Alternative Scenarios | 3a. The staff member declines the request.
+ 3a1. The system removes the pending assignment from the database and records the change in the audit log.
+ 3a2. The vacancy remains unfilled, and the system notifies the manager.
+
+4a. Another staff member has already taken the assignment.
+ 4a1. The system displays an error message and returns the staff member to the previous page.
+Postconditions | If confirmed: the staff member is assigned to the role and the vacancy is marked as filled.
+
+If declined: the role remains unassigned and the manager has been notified. The manager may find another replacement (UC-08).
+Priority | High
+

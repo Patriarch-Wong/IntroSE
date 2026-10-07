@@ -1,12 +1,45 @@
-# Track sequence diagrams and their authoritative source documents.
+# Track sequence diagrams and related source, design and review documents.
 /*
 !/.gitignore
 !/Final Use Case.docx
 !/Main Class Table.docx
+!/Extracted Class Table.docx
+!/Noun Extraction Table.docx
+!/requirement analysis register updated(4).xlsx
+!/SEQUENCE_DIAGRAM_ORCHESTRATION_PLAN.md
+!/TP2_INF2001 Team Project Description - Ambulance Services.pdf
 !/sequence-diagrams/
+!/class-diagrams/
 
 /sequence-diagrams/**
 !/sequence-diagrams/**/
 !/sequence-diagrams/**/*.puml
 !/sequence-diagrams/**/*.svg
 !/sequence-diagrams/**/*.png
+!/sequence-diagrams/**/*.md
+!/sequence-diagrams/**/*.json
+!/sequence-diagrams/**/*.txt
+!/sequence-diagrams/drawio-migration/uc-02-manage-availability.drawio
+!/sequence-diagrams/drawio-migration/uc-13-check-assignment-rule.drawio
+
+# The supporting class model belongs to the agreed domain baseline.
+/class-diagrams/**
+!/class-diagrams/main-class-table/
+!/class-diagrams/main-class-table/domain-class-diagram.puml
+!/class-diagrams/main-class-table/domain-class-diagram.svg
+!/class-diagrams/main-class-table/domain-class-diagram.png
+!/class-diagrams/main-class-table/rules.md
+
+# Keep local instructions, archives and superseded material out of new commits.
+[Aa][Gg][Ee][Nn][Tt][Ss].md
+/old/
+/old*
+/Revised class tables.docx
+/tmp/
+/sequence-diagrams/2026-10-07_20-29-15/
+/sequence-diagrams/2026-10-07_21-04-15/
+/sequence-diagrams/drawio-migration/migration-verification.json
+.DS_Store
+__pycache__/
+*.pyc
+~$*

@@ -1,0 +1,288 @@
+{
+  "candidate_path_traces": 24,
+  "cases": [
+    {
+      "results": [
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 1,
+      "writes": 3,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 1,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 1,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 1,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 1,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 1,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 2,
+      "writes": 3,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 2,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 2,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 2,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 2,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 2,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "cancelled",
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 2,
+      "writes": 3,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "cancelled",
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 2,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "cancelled",
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 2,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "cancelled",
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 2,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "cancelled",
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 2,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "cancelled",
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 2,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "cancelled",
+        "prevented",
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 4,
+      "writes": 3,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "cancelled",
+        "prevented",
+        "allowed"
+      ],
+      "slot": "new",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 4,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "cancelled",
+        "prevented",
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 4,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "cancelled",
+        "prevented",
+        "allowed"
+      ],
+      "slot": "existing",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 4,
+      "writes": 0,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "cancelled",
+        "prevented",
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": false,
+      "candidate_loads": 4,
+      "writes": 2,
+      "balanced_executions": true
+    },
+    {
+      "results": [
+        "prevented",
+        "cancelled",
+        "prevented",
+        "allowed"
+      ],
+      "slot": "replace",
+      "unavailable_on_allowed": true,
+      "candidate_loads": 4,
+      "writes": 0,
+      "balanced_executions": true
+    }
+  ],
+  "distinct_sql_preserved": true,
+  "unaffected_open_remove_eligibility_and_final_save_unchanged": true,
+  "png_source_metadata_matches": true,
+  "png_size": [
+    2012,
+    4973
+  ],
+  "svg_viewBox": "0 0 2013 4974",
+  "sha256": {
+    "uc-04-build-weekly-roster.png": "099c67005f99bd516d3ccff697a6a48df6c2f1fa3d033651aa4f92df7c951a67",
+    "uc-04-build-weekly-roster.puml": "b8da4a02e203d0e32e8e0999919443d2e876076209995a411a329c74b0ab68e2",
+    "uc-04-build-weekly-roster.svg": "eb03eac96b6bb222421ead8e91cb6d64391db074c4ba2c594ce884237668f5b2"
+  }
+}

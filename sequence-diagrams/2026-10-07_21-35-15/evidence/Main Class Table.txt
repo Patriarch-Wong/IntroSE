@@ -1,0 +1,22 @@
+Extracted Classes
+
+
+
+
+
+
+
+Class | Responsibility | Key attributes | Used in
+UserAccount | Maintain account details, staff-ID uniqueness and active/deactivated status; support login and candidate eligibility while retaining past records. | fullName, staffID, contactDetails, startDate, accountStatus | UC-01
+Staff | Maintain recorded qualifications; check staff assignment conflicts and rest; derive weekly and calendar-month assigned hours. | qualifiedRoles, /weeklyAssignedHours, /monthlyAssignedHours | UC-01–10, UC-12–14
+StaffAvailability | Record individual-shift availability within the five-week planning period; flag affected late roster weeks without modifying published assignments. | available, lateFlag | UC-02, UC-04, UC-06, UC-08
+JobPreference | Record optional shift-type and station preferences for a roster week. | rosterWeek, preferredShiftType, preferredStations | UC-03–04, UC-06, UC-08
+WeeklyRoster | Maintain draft/published rosters, check publication readiness, identify shortfalls and calculate fleet utilisation by shift; preserve published status during amendment. | rosterWeek, status | UC-01, UC-04–09, UC-11–12, UC-14
+Shift | Represent a dated 12-hour day/night duty period and provide timing for conflict, rest, workload and utilisation calculations. | date, shiftType, startTime, endTime, /durationHours | UC-02, UC-04–14
+RosterSlot | Represent one ambulance in one shift; derive staffing completeness and manpower needs; identify an unavailable assigned ambulance requiring amendment. | /missingRoles, /staffRequired, /isFullyStaffed | UC-04–09, UC-11–14
+Assignment | Link staff to a slot and fulfilled roles; manage confirmation, rejection and removal; remove pending assignments when withdrawn or declined. | fulfilledRoles, confirmationStatus | UC-01–02, UC-04–14
+Ambulance | Maintain ambulance details and active status; check availability and same-shift slot conflicts; derive scheduled utilisation. | ambulanceNumber, activeStatus, /scheduledUtilisation | UC-04–09, UC-11–14
+AmbulanceAvailability | Record availability for individual shifts and identify assignments affected by unavailability. | available | UC-04–06, UC-12
+Station | Identify stations used in preferences, assignment details and date-specific candidate location. | stationName | UC-03–04, UC-06, UC-08–09, UC-14
+AuditEntry | Record changes and publication events with acting user and timestamp; include previous/new values and stated reason where applicable. | actingUser, timestamp, previousValue, newValue, reason | UC-01–02, UC-04–08, UC-12, UC-14
+

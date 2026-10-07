@@ -1,0 +1,146 @@
+@startuml domain-class-diagram
+title Domain class diagram: ambulance rostering
+
+hide empty members
+hide circle
+skinparam style strictuml
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam classAttributeIconSize 0
+skinparam classBackgroundColor #FAFAFA
+skinparam classBorderColor #333333
+skinparam ArrowColor #333333
+skinparam nodesep 60
+skinparam ranksep 60
+
+' Simplified from the supplied domain-class-diagram.puml.
+' 12 domain classes; attributes from Main Class Table.docx.
+' Types and multiplicities are modeling choices; behaviour is in the use cases.
+' preferredStations and actingUser are shown as association-end properties.
+' Business constraints and derivation scope are recorded in rules.md.
+
+class UserAccount {
+  - fullName : String
+  - staffID : String {id}
+  - contactDetails : String
+  - startDate : Date
+  - accountStatus : ActiveStatus
+}
+
+class Staff {
+  - qualifiedRoles : String[1..*]
+  - /weeklyAssignedHours : Integer
+  - /monthlyAssignedHours : Integer
+}
+
+class StaffAvailability {
+  - available : Boolean
+  - lateFlag : Boolean
+}
+
+class JobPreference {
+  - rosterWeek : Date
+  - preferredShiftType : ShiftType[0..1]
+}
+
+class WeeklyRoster {
+  - rosterWeek : Date
+  - status : RosterStatus
+}
+
+class Shift {
+  - date : Date
+  - shiftType : ShiftType
+  - startTime : Time
+  - endTime : Time
+  - /durationHours : Integer
+}
+
+class RosterSlot {
+  - /missingRoles : String[0..*] {nonunique}
+  - /staffRequired : Integer
+  - /isFullyStaffed : Boolean
+}
+
+class Assignment {
+  - fulfilledRoles : String[1..*]
+  - confirmationStatus : ConfirmationStatus
+}
+
+class Ambulance {
+  - ambulanceNumber : String
+  - activeStatus : ActiveStatus
+  - /scheduledUtilisation : Real
+}
+
+class AmbulanceAvailability {
+  - available : Boolean
+}
+
+class Station {
+  - stationName : String
+}
+
+class AuditEntry {
+  - timestamp : DateTime
+  - previousValue : String[0..1]
+  - newValue : String[0..1]
+  - reason : String[0..1]
+}
+
+package Enumerations {
+  enum ActiveStatus <<enumeration>> {
+    active
+    deactivated
+  }
+
+  enum RosterStatus <<enumeration>> {
+    draft
+    published
+  }
+
+  enum ShiftType <<enumeration>> {
+    day
+    night
+  }
+
+  enum ConfirmationStatus <<enumeration>> {
+    pending
+    confirmed
+  }
+  ActiveStatus -[hidden]right- RosterStatus
+  RosterStatus -[hidden]right- ShiftType
+  ShiftType -[hidden]right- ConfirmationStatus
+}
+
+UserAccount "1" *-- "0..1" Staff : profile
+UserAccount "<back:white>-actingUser</back>\n1" -- "0..*" AuditEntry
+
+Staff "1" *-- "0..*" StaffAvailability : records
+Staff "1" *-- "0..*" JobPreference : states
+Staff "1" -- "0..*" Assignment : holds
+
+StaffAvailability "0..*" -- "1" Shift : for
+JobPreference "0..*" -- "<back:white>-preferredStations</back>\n<back:white>0..*</back>" Station
+
+WeeklyRoster "1" *-- "0..*" RosterSlot : contains
+RosterSlot "1" *-- "0..*" Assignment : staffing
+RosterSlot "0..*" -- "1" Shift : during
+RosterSlot "0..*" -right- "1" Ambulance : uses
+RosterSlot "0..*" -- "0..1" Station : station
+
+Ambulance "1" *-- "0..*" AmbulanceAvailability : has
+AmbulanceAvailability "0..*" -- "1" Shift : for
+
+
+' Layout only; hidden links do not represent domain relationships.
+UserAccount -[hidden]right- WeeklyRoster
+Staff -[hidden]right- RosterSlot
+Shift -[hidden]down- ActiveStatus
+
+legend bottom
+  - private attribute    / derived attribute    Filled diamond: composition
+endlegend
+@enduml

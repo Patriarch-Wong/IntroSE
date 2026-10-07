@@ -1,0 +1,10 @@
+{
+  "github_main": "647cee105db78da394c3275b50229ba096be7f76",
+  "baseline_folder": "sequence-diagrams/2026-10-07_21-35-15",
+  "checked_with": "git ls-remote origin refs/heads/main",
+  "source_hashes": {
+    "Final Use Case.docx": "e511a527536198dd248dc4af9bf77fabee831537adca49d09c39d73c3b3c524e",
+    "Main Class Table.docx": "26b415b0518b62b5b519d3e27bc92776ea221d45ae560c3141c6e38c0880d88e",
+    "AGENTS.md": "01fb06ebb175e456ed2f589b8a12a4c723e797eb7eb61a3aeff32f958153a583"
+  }
+}

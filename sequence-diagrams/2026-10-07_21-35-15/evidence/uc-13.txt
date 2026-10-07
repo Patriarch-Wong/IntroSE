@@ -1,0 +1,38 @@
+Field | Details
+ID | UC-13
+Name | Check Assignment Rule
+Description | The system checks a proposed assignment of a staff member to a role in a slot against the assignment rules. This use case is included by UC-04, UC-06 and UC-08 and is never started directly by an actor.
+Primary Actor | Manager (through the base use case)
+Secondary Actor(s) | None
+Related Requirements | FR-08, FR-09, FR-10, FR-11
+Relationships | Included by UC-04 Build Weekly Roster, UC-06 Amend Published Roster and UC-08 Find Standby Replacement.
+Preconditions | A base use case (UC-04, UC-06 or UC-08) has proposed a staff member for a role in a slot.
+Trigger | The manager selects a staff member for a role in a base use case.
+Main Success Scenario | 1. The system checks that the staff member is recorded as qualified for the role.
+
+2. The system checks that the staff member is not already assigned to another slot in the same shift.
+
+3. The system checks that the ambulance associated with the slot is not assigned to another roster slot in the same shift.
+
+4. The system checks that the assignment leaves the staff member at least 12 hours of rest between shifts.
+
+5. The system checks whether the assignment would take the staff member above 40 assigned hours in the roster week.
+
+6. The system allows the assignment, and the base use case continues.
+Alternative Scenarios | 1a. The staff member is not recorded as qualified for the selected role.
+ 1a1. The system prevents the assignment and returns the reason to the base use case.
+
+2a. The staff member is already assigned to another roster slot in the same shift.
+ 2a1. The system prevents the assignment and returns the reason to the base use case.
+
+3a. The ambulance associated with the roster slot is already assigned to another roster slot in the same shift.
+ 3a1. The system prevents the assignment and returns the reason to the base use case.
+
+4a. The proposed assignment would leave the staff member with less than 12 hours of rest between shifts.
+ 4a1. The system prevents the assignment and returns the reason to the base use case.
+
+5a. The assignment would take the staff member above 40 assigned hours in the roster week.
+ 5a1. The system warns the manager on screen without blocking.
+ 5a2. The manager confirms (continue at step 6) or cancels (the assignment is not made).
+Postconditions | The base use case knows whether the assignment is allowed or prevented, and why.
+Priority | High

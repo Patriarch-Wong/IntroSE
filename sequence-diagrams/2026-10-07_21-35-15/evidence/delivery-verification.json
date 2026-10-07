@@ -1,0 +1,421 @@
+{
+  "checked_at_singapore": "2026-10-07T21:52:12.382224+08:00",
+  "source_snapshot_unchanged": true,
+  "plantuml_version": "1.2026.8",
+  "diagrams": {
+    "uc-02-manage-availability": {
+      "dimensions": [
+        1654,
+        1420
+      ],
+      "png_embedded_source_matches": true,
+      "database_requests": [
+        {
+          "line": 48,
+          "label": "-- Retrieve saved availability and planning shifts\\nSELECT s.*, a.available, a.lateFlag\\nFROM Shift s LEFT JOIN StaffAvailability a\\nON a.shiftID = s.shiftID AND a.staffID = :staffId\\nWHERE s.date >= :windowStart\\nAND s.date < :windowEnd;",
+          "guards": []
+        },
+        {
+          "line": 88,
+          "label": "-- Save this shift's availability and late flag\\nINSERT INTO StaffAvailability\\n(staffID, shiftID, available, lateFlag)\\nVALUES (:staffId, :shiftId, :available, :lateFlag)\\nON CONFLICT (staffID, shiftID) DO UPDATE\\nSET available = EXCLUDED.available,\\nlateFlag = EXCLUDED.lateFlag;",
+          "guards": [
+            "each prepared shift record"
+          ]
+        },
+        {
+          "line": 101,
+          "label": "-- Store the availability-change audit entry\\nINSERT INTO AuditEntry\\n(actingUser, timestamp, previousValue, newValue, reason)\\nVALUES (:actor, :time, :previous, :new, :reason);",
+          "guards": []
+        }
+      ],
+      "database_replies": [
+        {
+          "line": 50,
+          "label": "shiftAvailabilityRecords[]"
+        },
+        {
+          "line": 90,
+          "label": "shift availability and late flag saved"
+        },
+        {
+          "line": 103,
+          "label": "availability-change audit entry stored"
+        }
+      ],
+      "message_count": 24,
+      "fragments": [
+        "each submitted roster week",
+        "each prepared shift record",
+        "one or more submitted weeks are late"
+      ],
+      "files": {
+        "uc-02-manage-availability.puml": {
+          "sha256": "0fa0d6e317a0941d7926925ac9f45d22c388b192a90c60a696bc2601ae30f21e",
+          "bytes": 5544
+        },
+        "uc-02-manage-availability.png": {
+          "sha256": "eb6305e9442cbe34b988de423a0e83a83485ac5c8fc6e73a4335c8426c8e57f7",
+          "bytes": 156284
+        },
+        "uc-02-manage-availability.svg": {
+          "sha256": "ba4b836e637ddc5fb1346f8dbceaf84042046dc6bd3cfbd7ef005d91f7aceaef",
+          "bytes": 46693
+        }
+      }
+    },
+    "uc-04-build-weekly-roster": {
+      "dimensions": [
+        2038,
+        5446
+      ],
+      "png_embedded_source_matches": true,
+      "database_requests": [
+        {
+          "line": 48,
+          "label": "-- Retrieve the selected week's roster\\nSELECT * FROM WeeklyRoster\\nWHERE rosterWeek = :week;",
+          "guards": []
+        },
+        {
+          "line": 53,
+          "label": "-- Create an empty draft for this week\\nINSERT INTO WeeklyRoster (rosterWeek, status)\\nVALUES (:week, 'draft');",
+          "guards": [
+            "no roster exists"
+          ]
+        },
+        {
+          "line": 61,
+          "label": "-- Record creation of this week's draft\\nINSERT INTO AuditEntry\\n(actingUser, timestamp, previousValue, newValue, reason)\\nVALUES (:actor, :time, :previous, :new, :reason);",
+          "guards": [
+            "no roster exists"
+          ]
+        },
+        {
+          "line": 66,
+          "label": "-- Retrieve roster details and staff availability\\nSELECT * FROM WeekPlanningView\\nWHERE rosterWeek = :week;",
+          "guards": []
+        },
+        {
+          "line": 95,
+          "label": "-- Find eligible ambulances for this shift and slot\\nSELECT a.ambulanceNumber\\nFROM Ambulance a JOIN AmbulanceAvailability u\\n  ON u.ambulanceNumber = a.ambulanceNumber\\nWHERE a.activeStatus = 'active' AND u.shiftID = :shiftId\\n  AND u.available = TRUE AND NOT EXISTS\\n  (SELECT 1 FROM RosterSlot r\\n   WHERE r.ambulanceNumber = a.ambulanceNumber\\n     AND r.shiftID = :shiftId\\n     AND (:slotId IS NULL OR r.slotID <> :slotId));",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning"
+          ]
+        },
+        {
+          "line": 119,
+          "label": "-- Remove the staff assignment from this slot\\nDELETE FROM Assignment\\nWHERE assignmentID = :assignmentId AND slotID = :slotId;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager chooses to remove an existing assignment"
+          ]
+        },
+        {
+          "line": 131,
+          "label": "-- Record removal of the draft assignment\\nINSERT INTO AuditEntry\\n(actingUser, timestamp, previousValue, newValue, reason)\\nVALUES (:actor, :time, :previous, :new, :reason);",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager chooses to remove an existing assignment"
+          ]
+        },
+        {
+          "line": 147,
+          "label": "-- Retrieve up to three suitable staff candidates\\nSELECT staffID, availability, assignmentRecords,\\n  jobPreference, datedLocation\\nFROM CandidateOption\\nWHERE rosterWeek = :week AND shiftID = :shiftId\\n  AND ambulanceNumber = :ambulanceId\\n  AND requestedRoles = :roles\\nFETCH FIRST 3 ROWS ONLY;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment"
+          ]
+        },
+        {
+          "line": 168,
+          "label": "-- Retrieve this candidate's assignment-rule context\\nSELECT * FROM StaffRuleContext\\nWHERE staffID = :staffId AND rosterWeek = :week;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled"
+          ]
+        },
+        {
+          "line": 172,
+          "label": "-- Retrieve this ambulance's slots in the selected shift\\nSELECT * FROM RosterSlot\\nWHERE ambulanceNumber = :ambulanceId\\n  AND shiftID = :shiftId;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled"
+          ]
+        },
+        {
+          "line": 192,
+          "label": "-- Store this ambulance's new roster slot\\nINSERT INTO RosterSlot\\n(slotID, rosterWeek, shiftID, ambulanceNumber)\\nVALUES (:slotId, :week, :shiftId, :ambulanceId);",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled",
+            "result is allowed",
+            "ambulance has not been made unavailable",
+            "proposed slot has not yet been stored"
+          ]
+        },
+        {
+          "line": 198,
+          "label": "-- Set the selected ambulance for this slot\\nUPDATE RosterSlot SET ambulanceNumber = :ambulanceId\\nWHERE slotID = :slotId;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled",
+            "result is allowed",
+            "ambulance has not been made unavailable",
+            "existing slot uses a different selected ambulance"
+          ]
+        },
+        {
+          "line": 204,
+          "label": "-- Store the confirmed staff assignment\\nINSERT INTO Assignment\\n(assignmentID, slotID, staffID, fulfilledRoles, confirmationStatus)\\nVALUES (:assignmentId, :slotId, :staffId, :roles, 'confirmed');",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled",
+            "result is allowed",
+            "ambulance has not been made unavailable",
+            "filling an unassigned role"
+          ]
+        },
+        {
+          "line": 209,
+          "label": "-- Replace the staff member assigned to these roles\\nUPDATE Assignment\\nSET staffID = :staffId, fulfilledRoles = :roles,\\n  confirmationStatus = 'confirmed'\\nWHERE assignmentID = :replacedAssignmentId\\n  AND slotID = :slotId;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled",
+            "result is allowed",
+            "ambulance has not been made unavailable",
+            "replacing an existing assignment"
+          ]
+        },
+        {
+          "line": 222,
+          "label": "-- Record the draft assignment and slot changes\\nINSERT INTO AuditEntry\\n(actingUser, timestamp, previousValue, newValue, reason)\\nVALUES (:actor, :time, :previous, :new, :reason);",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled",
+            "result is allowed",
+            "ambulance has not been made unavailable"
+          ]
+        },
+        {
+          "line": 240,
+          "label": "-- Refresh up to three suitable staff candidates\\nSELECT staffID, availability, assignmentRecords,\\n  jobPreference, datedLocation\\nFROM CandidateOption\\nWHERE rosterWeek = :week AND shiftID = :shiftId\\n  AND ambulanceNumber = :ambulanceId\\n  AND requestedRoles = :roles\\nFETCH FIRST 3 ROWS ONLY;",
+          "guards": [
+            "roster status is draft",
+            "allocation requested and no invalid-ambulance warning",
+            "eligibleAmbulanceRecords is not empty",
+            "Manager fills a role or replaces an existing assignment",
+            "first candidate selection or previous result prevented/cancelled",
+            "result is prevented(reason) or cancelled"
+          ]
+        },
+        {
+          "line": 270,
+          "label": "-- Retain this week's roster as a draft\\nUPDATE WeeklyRoster SET status = 'draft'\\nWHERE rosterWeek = :week AND status = 'draft';",
+          "guards": [
+            "roster status is draft",
+            "no invalid-ambulance warning"
+          ]
+        },
+        {
+          "line": 278,
+          "label": "-- Record saving of the current draft\\nINSERT INTO AuditEntry\\n(actingUser, timestamp, previousValue, newValue, reason)\\nVALUES (:actor, :time, :previous, :new, :reason);",
+          "guards": [
+            "roster status is draft",
+            "no invalid-ambulance warning"
+          ]
+        }
+      ],
+      "database_replies": [
+        {
+          "line": 50,
+          "label": "rosterRecords[] (zero or one)"
+        },
+        {
+          "line": 55,
+          "label": "empty draft roster stored"
+        },
+        {
+          "line": 63,
+          "label": "draft-creation audit entry stored"
+        },
+        {
+          "line": 68,
+          "label": "weekPlanningRecord (status, slots, assignments,\\nambulances, staff details, availability)"
+        },
+        {
+          "line": 97,
+          "label": "eligibleAmbulanceRecords[]"
+        },
+        {
+          "line": 121,
+          "label": "assignment removed"
+        },
+        {
+          "line": 133,
+          "label": "assignment-removal audit entry stored"
+        },
+        {
+          "line": 149,
+          "label": "candidateRecords[] (up to three)"
+        },
+        {
+          "line": 170,
+          "label": "staffRuleRecord (qualifications, weekly commitments,\\nshift timings and commitment statuses)"
+        },
+        {
+          "line": 174,
+          "label": "ambulanceSlotRecords[]"
+        },
+        {
+          "line": 194,
+          "label": "ambulance roster slot stored"
+        },
+        {
+          "line": 200,
+          "label": "slot's assigned ambulance replaced"
+        },
+        {
+          "line": 206,
+          "label": "confirmed assignment stored"
+        },
+        {
+          "line": 211,
+          "label": "assigned staff replaced; assignment confirmed"
+        },
+        {
+          "line": 224,
+          "label": "assignment-and-slot change audit entry stored"
+        },
+        {
+          "line": 242,
+          "label": "candidateRecords[] (up to three)"
+        },
+        {
+          "line": 272,
+          "label": "roster retained as draft"
+        },
+        {
+          "line": 280,
+          "label": "draft-save audit entry stored"
+        }
+      ],
+      "message_count": 89,
+      "fragments": [
+        "no roster exists",
+        "roster status is draft",
+        "for each existing slot",
+        "roster status is published",
+        "roster status is draft",
+        "roster status is draft",
+        "allocation requested and no invalid-ambulance warning",
+        "eligibleAmbulanceRecords is empty",
+        "eligibleAmbulanceRecords is not empty",
+        "eligibleAmbulanceRecords is not empty",
+        "Manager chooses to remove an existing assignment",
+        "Manager fills a role or replaces an existing assignment",
+        "for each candidate",
+        "first candidate selection or previous result prevented/cancelled",
+        "result is allowed",
+        "ambulance has not been made unavailable",
+        "proposed slot has not yet been stored",
+        "existing slot uses a different selected ambulance",
+        "filling an unassigned role",
+        "replacing an existing assignment",
+        "ambulance made unavailable",
+        "result is prevented(reason) or cancelled",
+        "for each candidate",
+        "result is allowed and no invalid-ambulance warning",
+        "invalid-ambulance warning",
+        "no invalid-ambulance warning"
+      ],
+      "files": {
+        "uc-04-build-weekly-roster.puml": {
+          "sha256": "a57dae2f851c98a65241b7ea936eae0134508c5451e89fc2ad451b4b2b24771c",
+          "bytes": 14904
+        },
+        "uc-04-build-weekly-roster.png": {
+          "sha256": "ce5fa8fc7080fd41827a8f9dd30e744d6818cb49ef8380a92ade1b663b8159eb",
+          "bytes": 673634
+        },
+        "uc-04-build-weekly-roster.svg": {
+          "sha256": "6193016210813749f3ecbd471863bce92c83bf3e7d61fc3622350048785b0abd",
+          "bytes": 187037
+        }
+      }
+    },
+    "uc-13-check-assignment-rule": {
+      "dimensions": [
+        1404,
+        1312
+      ],
+      "png_embedded_source_matches": true,
+      "database_requests": [],
+      "database_replies": [],
+      "message_count": 23,
+      "fragments": [
+        "not qualified",
+        "qualified",
+        "assigned to another slot in this shift",
+        "no staff conflict",
+        "ambulance assigned to another slot in this shift",
+        "no ambulance conflict",
+        "rest is less than 12 hours",
+        "at least 12 hours rest",
+        "projectedHours > 40",
+        "decision = confirm",
+        "decision = cancel",
+        "projectedHours <= 40"
+      ],
+      "files": {
+        "uc-13-check-assignment-rule.puml": {
+          "sha256": "4d4c48202b09562703d441682571309c895407f6319dce71e4e84971ee71dfce",
+          "bytes": 3747
+        },
+        "uc-13-check-assignment-rule.png": {
+          "sha256": "d6d09420cbbb08e73dd40fba2bf08e524e353603f87910ebb5b318a5bccb3d44",
+          "bytes": 115878
+        },
+        "uc-13-check-assignment-rule.svg": {
+          "sha256": "09e17bf5f274480e594d129680376c853b930c3fa5a50e9a034bd0f397f14c5b",
+          "bytes": 27943
+        }
+      }
+    }
+  },
+  "inventory": {
+    "diagram_files": 9,
+    "supporting_documents": [
+      "README.md",
+      "interaction-contract.md",
+      "model-issues.md",
+      "validation-report.md"
+    ]
+  }
+}

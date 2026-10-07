@@ -1,0 +1,37 @@
+Field | Details
+ID | UC-02
+Name | Manage Availability
+Description | A staff member records or changes their own availability for individual 12-hour shifts up to five weeks ahead, so that managers can plan the roster.
+Primary Actor | Staff
+Secondary Actor(s) | Manager (notified of late changes), Database
+Related Requirements | FR-02, FR-03, FR-04, NFR-05, NFR-07
+Preconditions | The staff member is logged in.
+Trigger | The staff member wants to enter or change their availability.
+Main Success Scenario | 1. The staff member opens the availability page. 
+
+2. The system presents the staff member’s saved availability and the 12-hour day and night shifts within the five-week planning period.
+
+3. The staff member indicates the shifts they are available to work.
+
+4. The staff member submits their availability.
+
+5. The system checks the submission against the Wednesday cut-off for each submitted roster week and determines that none of the submitted availability is late.
+
+6. The system saves the submitted availability without modifying any published assignment.
+
+7. The system records the availability change in the audit log and makes the saved availability visible to managers.
+
+8. The system confirms that the availability has been saved.
+Alternative Scenarios | 5a. Availability for one or more submitted roster weeks is submitted or changed after the Wednesday cut-off.
+ 5a1. The system identifies the affected roster weeks as late.
+ 5a2. The system records the availability change in the audit log and makes the saved availability visible to managers.
+ 5a3. The system notifies the manager of the affected late submissions or changes for consideration.
+ 5a4. The use case continues at step 8 and ends.
+Postconditions | The staff member’s submitted availability is stored within the five-week planning period and is visible to managers.
+
+An audit record exists for the availability change.
+
+For late submissions or changes, the affected availability is flagged as late and the manager is notified.
+
+Published assignments remain unchanged. Any subsequent amendment requires an authorised manager through UC-06 Amend Published Roster.
+Priority | High

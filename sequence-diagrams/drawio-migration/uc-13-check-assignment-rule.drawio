@@ -1,0 +1,507 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" agent="Native UML migration" version="29.0.0" type="device">
+  <diagram id="uc-13-check-assignment-rule" name="UC-13 Check Assignment Rule">
+    <mxGraphModel dx="1200" dy="850" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1793" pageHeight="2124" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="shape-1" value="alt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="47" umlKind="alt">
+          <mxGeometry x="25" y="423" width="1743.189" height="1645" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-2" value="alt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="55" umlKind="alt">
+          <mxGeometry x="37" y="654" width="1719.189" height="1394" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-3" value="alt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="63" umlKind="alt">
+          <mxGeometry x="49" y="904" width="1695.189" height="1124" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-4" value="alt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="71" umlKind="alt">
+          <mxGeometry x="61" y="1154" width="1671.189" height="854" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-5" value="alt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="79" umlKind="alt">
+          <mxGeometry x="73" y="1404" width="1647.189" height="584" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-6" value="alt" style="shape=umlFrame;html=0;fillColor=none;strokeColor=#607D8B;strokeWidth=1.2;pointerEvents=0;container=0;collapsible=0;width=65;height=26;fontFamily=Arial;fontSize=14;fontStyle=1;align=left;verticalAlign=top;spacingLeft=8;spacingTop=4;" parent="1" vertex="1" sourceLine="89" umlKind="alt">
+          <mxGeometry x="85" y="1693" width="1623.189" height="186" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-manager" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="235.0" y="68" width="100" height="2056" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-7" value="Manager" style="shape=umlActor;html=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;fontFamily=Arial;fontSize=14;fillColor=#FFFFFF;strokeColor=#263238;" parent="participant-manager" vertex="1">
+          <mxGeometry x="34.0" y="0" width="32" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-manager" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-manager" vertex="1">
+          <mxGeometry x="50.0" y="86" width="1" height="1954" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-rosterUI" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="476.209" y="68" width="195.4" height="2056" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-8" value="«boundary»&#10;rosterUI:RosterBoundary" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EAF4FB;strokeColor=#455A64;" parent="participant-rosterUI" vertex="1">
+          <mxGeometry x="0" y="16" width="195.4" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-rosterUI" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-rosterUI" vertex="1">
+          <mxGeometry x="97.7" y="86" width="1" height="1954" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-baseControl" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="701.609" y="68" width="187.8" height="2056" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-9" value="«control»&#10;baseControl:BaseControl" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#FFF3DA;strokeColor=#455A64;" parent="participant-baseControl" vertex="1">
+          <mxGeometry x="0" y="16" width="187.8" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-baseControl" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-baseControl" vertex="1">
+          <mxGeometry x="93.9" y="86" width="1" height="1954" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-rules" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="971.81" y="68" width="209.8" height="2056" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-10" value="«control»&#10;rules:AssignmentRuleControl" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#FFF3DA;strokeColor=#455A64;" parent="participant-rules" vertex="1">
+          <mxGeometry x="0" y="16" width="209.8" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-rules" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-rules" vertex="1">
+          <mxGeometry x="104.9" y="86" width="1" height="1954" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-staff" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="1309.189" y="68" width="106.6" height="2056" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-11" value="«entity»&#10;staff:Staff" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EDF6EC;strokeColor=#455A64;" parent="participant-staff" vertex="1">
+          <mxGeometry x="0" y="16" width="106.6" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-staff" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-staff" vertex="1">
+          <mxGeometry x="53.3" y="86" width="1" height="1954" as="geometry" />
+        </mxCell>
+        <mxCell id="participant-ambulance" value="" style="group;connectable=0;recursiveResize=0;collapsible=0;" parent="1" vertex="1">
+          <mxGeometry x="1445.789" y="68" width="157.4" height="2056" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-12" value="«entity»&#10;ambulance:Ambulance" style="rounded=0;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=14;fillColor=#EDF6EC;strokeColor=#455A64;" parent="participant-ambulance" vertex="1">
+          <mxGeometry x="0" y="16" width="157.4" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="lifeline-ambulance" value="" style="shape=line;direction=south;html=0;dashed=1;dashPattern=5 5;strokeWidth=1;strokeColor=#8799A3;" parent="participant-ambulance" vertex="1">
+          <mxGeometry x="78.7" y="86" width="1" height="1954" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-13" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-staff" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="284" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-14" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-staff" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="515" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-15" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-ambulance" vertex="1" umlKind="execution">
+          <mxGeometry x="73.7" y="765" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-16" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-staff" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="1015" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-17" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-staff" vertex="1" umlKind="execution">
+          <mxGeometry x="48.3" y="1265" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-18" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-rosterUI" vertex="1" umlKind="execution">
+          <mxGeometry x="97.7" y="1505" width="10" height="49" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-19" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-rosterUI" vertex="1" umlKind="execution">
+          <mxGeometry x="92.7" y="1407" width="10" height="196" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-20" value="" style="rounded=0;html=0;fillColor=#FFFFFF;strokeColor=#455A64;strokeWidth=1;" parent="participant-rules" vertex="1" umlKind="execution">
+          <mxGeometry x="99.9" y="235" width="10" height="1659" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-21" value="UC-13 Check Assignment Rule" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontSize=20;fontStyle=1;align=center;" parent="1" vertex="1">
+          <mxGeometry x="25" y="15" width="1743.189" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="shape-22" value="A staff member was selected in the base workflow.&#10;The proposal and retrieved rule context are supplied." style="shape=note;size=12;html=0;whiteSpace=wrap;fillColor=#FFFBEA;strokeColor=#C8BE8A;fontFamily=Arial;fontSize=14;align=left;verticalAlign=middle;spacing=12;" parent="1" vertex="1">
+          <mxGeometry x="716.1095" y="188" width="440" height="64" as="geometry" />
+        </mxCell>
+        <mxCell id="message-23-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="235" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-23-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="235" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-23" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-23-source" target="message-23-target" sourceLine="39" sourceParticipant="baseControl" targetParticipant="rules" umlKind="synchronous" originalMessage="checkAssignment(proposal, context)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-23-label" value="checkAssignment(proposal, context)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-23" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="19" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-24-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="284" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-24-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="284" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-24" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-24-source" target="message-24-target" sourceLine="43" sourceParticipant="rules" targetParticipant="staff" umlKind="synchronous" originalMessage="isQualified(proposal.roles)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-24-label" value="isQualified(proposal.roles)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-24" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-25-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="333" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-25-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="333" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-25" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-25-source" target="message-25-target" sourceLine="45" sourceParticipant="staff" targetParticipant="rules" umlKind="reply" originalMessage="qualified">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-25-label" value="qualified" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-25" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-26" value="[not qualified]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="101" y="427" width="1653.189" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="426" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="426" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-27-source" target="message-27-target" sourceLine="48" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="prevented(not qualified for role)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-27-label" value="prevented(not qualified for role)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-27" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="19" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="line-28" value="" style="endArrow=none;startArrow=none;html=0;rounded=0;strokeColor=#607D8B;strokeWidth=1;dashed=1;dashPattern=5 5;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="25" y="516" as="sourcePoint" />
+            <mxPoint x="1768.189" y="516" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-29" value="[qualified]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="37" y="522" width="1719.189" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="515" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="515" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-30-source" target="message-30-target" sourceLine="51" sourceParticipant="rules" targetParticipant="staff" umlKind="synchronous" originalMessage="hasShiftConflict(proposal, context)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-30-label" value="hasShiftConflict(proposal, context)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-30" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-31-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="564" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-31-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="564" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-31" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-31-source" target="message-31-target" sourceLine="53" sourceParticipant="staff" targetParticipant="rules" umlKind="reply" originalMessage="staffConflict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-31-label" value="staffConflict" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-31" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-32" value="[assigned to another slot in this shift]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="113" y="658" width="1629.189" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="676" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="676" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-33-source" target="message-33-target" sourceLine="56" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="prevented(staff already assigned in shift)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-33-label" value="prevented(staff already assigned in&#10;shift)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-33" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="38" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="line-34" value="" style="endArrow=none;startArrow=none;html=0;rounded=0;strokeColor=#607D8B;strokeWidth=1;dashed=1;dashPattern=5 5;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="37" y="766" as="sourcePoint" />
+            <mxPoint x="1756.189" y="766" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-35" value="[no staff conflict]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="49" y="772" width="1695.189" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="message-36-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="765" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-36-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-ambulance" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="73.7" y="765" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-36" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-36-source" target="message-36-target" sourceLine="59" sourceParticipant="rules" targetParticipant="ambulance" umlKind="synchronous" originalMessage="hasShiftConflict(proposal, context)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-36-label" value="hasShiftConflict(proposal, context)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-36" vertex="1">
+          <mxGeometry x="0" y="0" width="423.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-211.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-37-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-ambulance" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="73.7" y="814" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-37-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="814" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-37" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-37-source" target="message-37-target" sourceLine="61" sourceParticipant="ambulance" targetParticipant="rules" umlKind="reply" originalMessage="ambulanceConflict">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-37-label" value="ambulanceConflict" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-37" vertex="1">
+          <mxGeometry x="0" y="0" width="423.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-211.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-38" value="[ambulance assigned to another slot in this shift]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="125" y="908" width="1605.189" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="926" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="926" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-39-source" target="message-39-target" sourceLine="64" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="prevented(ambulance already assigned in shift)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-39-label" value="prevented(ambulance already assigned in&#10;shift)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-39" vertex="1">
+          <mxGeometry x="0" y="0" width="265.0" height="38" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="line-40" value="" style="endArrow=none;startArrow=none;html=0;rounded=0;strokeColor=#607D8B;strokeWidth=1;dashed=1;dashPattern=5 5;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="49" y="1016" as="sourcePoint" />
+            <mxPoint x="1744.189" y="1016" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-41" value="[no ambulance conflict]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="61" y="1022" width="1671.189" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="1015" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1015" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-42-source" target="message-42-target" sourceLine="67" sourceParticipant="rules" targetParticipant="staff" umlKind="synchronous" originalMessage="hasMinimumRest(proposal, context)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-42-label" value="hasMinimumRest(proposal, context)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-42" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-43-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1064" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-43-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="1064" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-43" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-43-source" target="message-43-target" sourceLine="69" sourceParticipant="staff" targetParticipant="rules" umlKind="reply" originalMessage="hasMinimumRest">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-43-label" value="hasMinimumRest" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-43" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-44" value="[rest is less than 12 hours]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="137" y="1158" width="1581.189" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="1157" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="1157" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-45-source" target="message-45-target" sourceLine="72" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="prevented(less than 12 hours rest)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-45-label" value="prevented(less than 12 hours rest)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-45" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="19" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="line-46" value="" style="endArrow=none;startArrow=none;html=0;rounded=0;strokeColor=#607D8B;strokeWidth=1;dashed=1;dashPattern=5 5;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="61" y="1247" as="sourcePoint" />
+            <mxPoint x="1732.189" y="1247" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-47" value="[at least 12 hours rest]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="73" y="1253" width="1647.189" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="message-48-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="1265" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-48-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1265" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-48" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-48-source" target="message-48-target" sourceLine="75" sourceParticipant="rules" targetParticipant="staff" umlKind="synchronous" originalMessage="projectedWeeklyHours(proposal, context)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-48-label" value="projectedWeeklyHours(proposal,&#10;context)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-48" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="38" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-46" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-49-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-staff" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="48.3" y="1314" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-49-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="109.9" y="1314" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-49" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-49-source" target="message-49-target" sourceLine="77" sourceParticipant="staff" targetParticipant="rules" umlKind="reply" originalMessage="projectedHours">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-49-label" value="projectedHours" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-49" vertex="1">
+          <mxGeometry x="0" y="0" width="261.779" height="19" relative="1" as="geometry">
+            <mxPoint x="-130.8895" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-50" value="[projectedHours &gt; 40]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="149" y="1408" width="1557.189" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="1407" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rosterUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="102.7" y="1407" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-51-source" target="message-51-target" sourceLine="80" sourceParticipant="rules" targetParticipant="rosterUI" umlKind="synchronous" originalMessage="requestHoursDecision(projectedHours)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-51-label" value="requestHoursDecision(projectedHours)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-51" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-239.40050000000008" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-52-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rosterUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="92.7" y="1456" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-52-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-manager" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="1456" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-52" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-52-source" target="message-52-target" sourceLine="82" sourceParticipant="rosterUI" targetParticipant="manager" umlKind="asynchronous" originalMessage="over 40 assigned hours: confirm or cancel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-52-label" value="over 40 assigned hours: confirm or cancel" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-52" vertex="1">
+          <mxGeometry x="0" y="0" width="269.2" height="19" relative="1" as="geometry">
+            <mxPoint x="-129.9545" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-53-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-manager" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="1505" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-53-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rosterUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="97.7" y="1505" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-53" value="" style="endArrow=block;endFill=1;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=0;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-53-source" target="message-53-target" sourceLine="83" sourceParticipant="manager" targetParticipant="rosterUI" umlKind="synchronous" originalMessage="submitHoursDecision(decision)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-53-label" value="submitHoursDecision(decision)" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-53" vertex="1">
+          <mxGeometry x="0" y="0" width="264.909" height="19" relative="1" as="geometry">
+            <mxPoint x="-132.4545" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-54-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rosterUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="97.7" y="1554" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-54-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-manager" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="50.0" y="1554" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-54" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-54-source" target="message-54-target" sourceLine="85" sourceParticipant="rosterUI" targetParticipant="manager" umlKind="reply" originalMessage="decision received">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-54-label" value="decision received" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-54" vertex="1">
+          <mxGeometry x="0" y="0" width="264.909" height="19" relative="1" as="geometry">
+            <mxPoint x="-132.4545" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="message-55-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rosterUI" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="102.7" y="1603" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-55-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="1603" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-55" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-55-source" target="message-55-target" sourceLine="87" sourceParticipant="rosterUI" targetParticipant="rules" umlKind="reply" originalMessage="decision">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-55-label" value="decision" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-55" vertex="1">
+          <mxGeometry x="0" y="0" width="440" height="19" relative="1" as="geometry">
+            <mxPoint x="-239.40050000000008" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-56" value="[decision = confirm]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="161" y="1697" width="1533.189" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="message-57-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="1696" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-57-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="1696" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-57" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-57-source" target="message-57-target" sourceLine="90" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="allowed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-57-label" value="allowed" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-57" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="19" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="line-58" value="" style="endArrow=none;startArrow=none;html=0;rounded=0;strokeColor=#607D8B;strokeWidth=1;dashed=1;dashPattern=5 5;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="85" y="1786" as="sourcePoint" />
+            <mxPoint x="1708.189" y="1786" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-59" value="[decision = cancel]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="97" y="1792" width="1599.189" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="message-60-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="1785" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-60-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="1785" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-60" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-60-source" target="message-60-target" sourceLine="92" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="cancelled">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-60-label" value="cancelled" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-60" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="19" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="line-61" value="" style="endArrow=none;startArrow=none;html=0;rounded=0;strokeColor=#607D8B;strokeWidth=1;dashed=1;dashPattern=5 5;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="73" y="1895" as="sourcePoint" />
+            <mxPoint x="1720.189" y="1895" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="shape-62" value="[projectedHours &lt;= 40]" style="text;html=0;whiteSpace=wrap;overflow=visible;fontFamily=Arial;fontSize=14;fontColor=#172B36;align=left;verticalAlign=middle;spacing=0;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="85" y="1901" width="1623.189" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="message-63-source" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-rules" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="99.9" y="1894" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-63-target" value="" style="shape=ellipse;fillColor=none;strokeColor=none;opacity=0;resizable=0;" parent="participant-baseControl" vertex="1" umlKind="messageOccurrence">
+          <mxGeometry x="93.9" y="1894" width="0" height="0" as="geometry" />
+        </mxCell>
+        <mxCell id="message-63" value="" style="endArrow=open;endFill=0;endSize=9;startArrow=none;html=0;rounded=0;edgeStyle=none;strokeColor=#263238;strokeWidth=1.2;dashed=1;dashPattern=5 4;exitX=0.5;exitY=0.5;exitPerimeter=0;entryX=0.5;entryY=0.5;entryPerimeter=0;" parent="1" edge="1" source="message-63-source" target="message-63-target" sourceLine="96" sourceParticipant="rules" targetParticipant="baseControl" umlKind="reply" originalMessage="allowed">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="message-63-label" value="allowed" style="edgeLabel;html=0;whiteSpace=wrap;resizable=1;align=left;verticalAlign=middle;fontFamily=Arial;fontSize=14;fontColor=#172B36;labelBackgroundColor=#FFFFFF;spacing=0;overflow=visible;" parent="message-63" vertex="1">
+          <mxGeometry x="0" y="0" width="257.201" height="19" relative="1" as="geometry">
+            <mxPoint x="-126.10050000000001" y="-27" as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
