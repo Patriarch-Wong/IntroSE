@@ -1,0 +1,226 @@
+@startuml
+title UC-04 — Build Weekly Roster
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 280
+skinparam sequenceMessageAlign center
+skinparam ArrowColor #334155
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #64748B
+  ParticipantBorderColor #64748B
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #334155
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #64748B
+  GroupBackgroundColor #F8FAFC
+}
+
+
+
+
+actor Manager as manager
+boundary "roster:RosterBoundary" as rosterUI #EAF3FC
+control "roster:RosterController" as roster #ECF5ED
+control "rules:AssignmentRuleController" as rules #ECF5ED
+entity "staff:Staff" as staff #FFF9E8
+entity "slot:RosterSlot" as slot #FFF9E8
+entity "assignment:Assignment" as assignment #FFF9E8
+entity "ambulance:Ambulance" as ambulance #FFF9E8
+entity "audit:AuditEntry" as audit #FFF9E8
+database Database as db #F1F5F9
+
+note over manager, roster
+  Precondition: Manager is logged in.
+  A slot represents one ambulance in one dated 12-hour shift.
+  Selected roster week is within the five-week planning period.
+end note
+
+' Main 1 and 2; alternative 1a.
+manager -> rosterUI: submit("openAllocation", week)
+rosterUI -> roster: openWeek(week)
+roster -> db: Retrieve weekly roster, slots, assigned ambulances/staff,\nand staff availability for the selected week
+db --> roster: roster or none; slot and assignment records;\nweekly availability
+
+alt roster.status = published
+  roster -> rosterUI: display("Published roster", publishedRosterView)
+  rosterUI --> manager: Published roster; changes are made through\nUC-06 Amend Published Roster
+  note over manager, roster
+    This UC-04 branch ends here.
+  end note
+else draft roster exists or no roster exists
+  opt no roster exists
+    roster -> db: Create an empty weekly roster with status draft
+    db --> roster: empty draft roster; creation change
+    roster -> audit: recordChange("draft created", actingUser, timestamp,\nnull, draftRoster, null)
+    audit --> roster: auditData
+    roster -> db: Store audit entry
+    db --> roster: audit entry stored
+  end
+
+  loop for each existing draft slot
+    roster -> slot: staffingStatus(slotAssignments, crewPolicy)
+    slot --> roster: missingRoles, staffRequired, isFullyStaffed
+  end
+  roster -> rosterUI: display("Draft allocation", draftAllocationView)
+  rosterUI --> manager: Draft slots, assigned ambulances/staff and weekly availability;\nunfilled roles identified as requiring manpower
+
+  ' Main 3–10; repeat selection at main 3 after 4a or an edit.
+  loop (1,*) another allocation requested and no invalid-ambulance warning
+    manager -> rosterUI: submit("selectSlot", workSelection)
+    rosterUI -> roster: selectSlot(shift, slotSelection)
+    note over rosterUI, roster
+      SlotSelection is an existing slot ID or a proposed allocation row.
+      An empty draft offers a proposed row; it becomes a domain slot
+      only with its chosen ambulance. No new domain attribute is added.
+    end note
+    roster -> db: Retrieve ambulances that are active, available for this shift,\nand not assigned to another slot in the same shift
+    db --> roster: eligibleAmbulances
+
+    alt eligibleAmbulances is empty
+      ' Alternative 4a / 4a1 / 4a2.
+      roster -> rosterUI: display("No eligible ambulance", selectedShift)
+      rosterUI --> manager: No eligible ambulance is available;\nyou may select another shift or roster slot
+      note over manager, roster
+        Another allocation iteration returns to shift/slot selection.
+        No candidate selection or assignment save on this path.
+      end note
+    else one or more eligible ambulances
+      ' Main 4 and 5; alternative 5a.
+      roster -> rosterUI: display("Eligible ambulances", eligibleAmbulances)
+      rosterUI --> manager: Active, available ambulances with no other same-shift slot
+
+      alt fill a role
+        manager -> rosterUI: submit("selectAmbulanceAndRole", roleSelection)
+        rosterUI -> roster: selectRole(ambulanceId, roles)
+      else modify an existing draft assignment
+        manager -> rosterUI: submit("editAssignedRole", draftEdit)
+        rosterUI -> roster: editDraftAssignment(assignmentId, action)
+        alt action = remove
+          assignment <- roster: remove(null)
+          assignment --> roster: removalChange
+          roster -> db: Remove the assignment and save the draft-slot change;\nrelease its fulfilled roles
+          db --> roster: removal saved; remaining slotAssignments
+          roster -> slot: staffingStatus(slotAssignments, crewPolicy)
+          slot --> roster: removed roles require manpower; updated staffingStatus
+          roster -> audit: recordChange("draft assignment removed", actingUser, timestamp,\npreviousAssignment, null, null)
+          audit --> roster: auditData
+          roster -> db: Store audit entry
+          db --> roster: audit entry stored
+          roster -> rosterUI: display("Draft assignment removed", removalView)
+          rosterUI --> manager: Assignment removed and draft saved;\nreleased roles require manpower
+        else action = replace
+          note over roster, assignment
+            Continue at candidate display for the selected assigned role.
+            Keep the existing assignment until a replacement is accepted.
+          end note
+        end
+      end
+
+      opt fill a role or replace an existing assignment
+        ' Main 6–8, including the exact alternative 8a retry to main 6.
+        loop (1,*) first candidate attempt or previous result is prevented/cancelled
+          roster -> db: Retrieve up to three suitable staff candidates for this role/shift;\navailability, week assignments, job preferences and dated location
+          db --> roster: candidate records; supplied dated locations; PolicyContext
+          loop for each displayed candidate
+            roster -> staff: assignedHours(week, candidateAssignments, policy)
+            staff --> roster: assignedHours: Hours
+          end
+          note over roster, staff
+            staff denotes the candidate being evaluated, then the selected staff.
+            I02: pending-assignment contribution stays in PolicyContext.
+            I03: dated location is supplied; its data source is unresolved.
+            A weekly station preference is not treated as dated location.
+          end note
+          roster -> rosterUI: display("Suitable candidates", candidateView)
+          rosterUI --> manager: Up to three suitable candidates and their\navailability, assigned hours, preference and location for the date
+          manager -> rosterUI: submit("selectCandidate", staffId)
+          rosterUI -> roster: selectCandidate(staffId)
+          roster -> db: Retrieve RuleContext for the selected proposal:\nqualifications, assignments/slots, adjacent shifts and week workload
+          db --> roster: hydrated RuleContext, including PolicyContext
+          note over roster, rules
+            proposal = selected staff, slot/shift, ambulance, roles and week;
+            replacedAssignmentId is present only for a replacement.
+            Exclude that assignment from checks where appropriate,
+            while retaining unrelated commitments.
+            UC-13 formal baseController binds to roster:RosterController.
+          end note
+          ref over manager, ambulance
+            UC-13 Check Assignment Rule:
+            checkAssignment(proposal, context) -> result
+          end ref
+
+          alt result = prevented(reason) or cancelled
+            roster -> rosterUI: display("Assignment not accepted", result)
+            rosterUI --> manager: Assignment not saved; reason or cancellation outcome;\nreturn to candidate display
+            note over roster, db
+              No assignment or replacement is saved on this iteration.
+              Next iteration restarts at candidate retrieval/display.
+            end note
+          else result = allowed
+            note over roster, rules
+              Exit the candidate loop and proceed to the save step.
+            end note
+          end
+        end
+
+        ' Main 9 and alternative 9a. Only allowed leaves the candidate loop.
+        alt normal save path; assigned ambulance has not been made unavailable
+          roster -> assignment: prepare(proposal, confirmed)
+          assignment --> roster: confirmedAssignmentData
+          roster -> db: Create the proposed slot if needed; save confirmed assignment\nagainst its slot and roles; update slot.\nFor replacement, replace the previous assignment now
+          db --> roster: assignment and slot saved; previous/new values; slotAssignments
+          roster -> slot: staffingStatus(slotAssignments, crewPolicy)
+          slot --> roster: missingRoles, staffRequired, isFullyStaffed
+          roster -> audit: recordChange("draft assignment saved", actingUser, timestamp,\npreviousValues, newValues, null)
+          audit --> roster: auditData
+          roster -> db: Store audit entry
+          db --> roster: audit entry stored
+          roster -> rosterUI: display("Draft allocation updated", allocationView)
+          rosterUI --> manager: Assignment saved; roster slot updated;\nremaining roles require manpower
+        else ambulance made unavailable
+          roster -> rosterUI: display("Invalid ambulance assignment", affectedDraftSlot)
+          rosterUI --> manager: The draft contains an invalid ambulance assignment
+          note over roster, db
+            I07: the source specifies this warning but no continuation
+            or persistence outcome for the interrupted save step.
+            This scenario ends at the warning. It cannot enter another
+            allocation iteration or the successful final draft-save path.
+          end note
+        end
+      end
+    end
+  end
+
+  ' Main 10 and successful postconditions; explicitly excludes 9a.
+  opt no invalid-ambulance warning
+    manager -> rosterUI: submit("saveDraft", week)
+    rosterUI -> roster: saveDraft(week)
+    roster -> db: Save the current weekly roster with status draft
+    db --> roster: stored draft roster; previous/new values
+    roster -> audit: recordChange("draft saved", actingUser, timestamp,\npreviousValues, newValues, null)
+    audit --> roster: auditData
+    roster -> db: Store audit entry
+    db --> roster: audit entry stored
+    roster -> rosterUI: display("Draft saved", draftView)
+    rosterUI --> manager: Current weekly roster stored as draft;\nunfilled roles remain identified as requiring manpower
+    note over roster, db
+      Successful path: stored assignments passed UC-13;
+      selected ambulances are active, available and have no other
+      same-shift slot. Draft changes have audit entries.
+      Staff availability is read/displayed only; it is never modified.
+    end note
+  end
+end
+
+legend bottom
+  UML 2.5. Boundaries, controllers, value types and operations are proposed detailed design (I08).
+  Database requests are descriptive; no SQL schema or transaction guarantees are assumed.
+  Open source details: pending-assignment policy (I02), candidate dated-location source (I03),
+  and the unavailable-ambulance warning's continuation/persistence outcome (I07).
+endlegend
+@enduml

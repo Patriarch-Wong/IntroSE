@@ -1,0 +1,287 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #334155
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #94A3B8
+  ParticipantBorderColor #64748B
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #334155
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #64748B
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #64748B
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04: Build Weekly Roster
+caption Main success and all documented alternatives
+
+actor Manager as manager
+participant "roster:RosterBoundary" as ui <<boundary>> #EAF3FC
+participant "roster:RosterControl" as control <<control>> #ECF5ED
+participant "rules:AssignmentRuleControl" as rules <<control>> #ECF5ED
+participant "staff:Staff" as staff <<entity>> #FFF9E8
+participant "slot:RosterSlot" as slot <<entity>> #FFF9E8
+participant "assignment:Assignment" as assignment <<entity>> #FFF9E8
+participant "ambulance:Ambulance" as ambulance <<entity>> #FFF9E8
+participant "audit:AuditEntry" as audit <<entity>> #FFF9E8
+database "Database" as db #F1F5F9
+
+note over manager, control
+  Manager is logged in; selected week is within the five-week planning period.
+  A slot is one ambulance in one dated 12-hour shift.
+end note
+
+' Main 1-2 and alternative 1a.
+manager -> ui: openAllocation(week)
+activate ui
+ui -> control: openWeek(week)
+activate control
+control -> db: SELECT * FROM WeeklyRoster WHERE rosterWeek = :week;
+activate db
+db -->> control: rosterRecords[] (zero or one record)
+deactivate db
+opt no roster exists
+  control -> db: INSERT INTO WeeklyRoster (rosterWeek, status)\nVALUES (:week, 'draft');
+  activate db
+  db -->> control: insertedRows = 1
+  deactivate db
+  control -> audit: recordChange("draft created", actor, time, null, draft, null)
+  activate audit
+  audit -->> control: auditData
+  deactivate audit
+  control -> db: INSERT INTO AuditEntry\n  (actingUser, timestamp, previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, :reason);
+  activate db
+  db -->> control: insertedRows = 1
+  deactivate db
+end
+control -> db: SELECT * FROM WeekPlanningView WHERE rosterWeek = :week;
+activate db
+db -->> control: weekPlanningRecord (slots, assignments, ambulances, availability)
+deactivate db
+opt roster.status = draft
+  loop for each existing slot
+    control -> slot: staffingStatus(slotAssignments, crewPolicy)
+    activate slot
+    slot -->> control: missingRoles, staffRequired, isFullyStaffed
+    deactivate slot
+  end
+end
+control -->> ui: rosterView
+deactivate control
+alt roster.status = published
+  ui -->> manager: Published roster; make changes through UC-06
+else roster.status = draft
+  ui -->> manager: Draft slots, assigned ambulances/staff,\navailability and roles requiring manpower
+end
+deactivate ui
+
+' Published branch cannot enter this draft-only continuation.
+opt roster.status = draft
+  loop (1,*) allocation requested and no invalid-ambulance warning
+    ' Main 3-4 and alternative 4a.
+    manager -> ui: selectSlot(shiftId, slotSelection)
+    activate ui
+    ui -> control: selectSlot(shiftId, slotSelection)
+    activate control
+    control -> db: SELECT a.ambulanceNumber\nFROM Ambulance a JOIN AmbulanceAvailability u\n  ON u.ambulanceNumber = a.ambulanceNumber\nWHERE a.activeStatus = 'active' AND u.shiftID = :shiftId\n  AND u.available = TRUE AND NOT EXISTS\n  (SELECT 1 FROM RosterSlot r\n   WHERE r.ambulanceNumber = a.ambulanceNumber\n     AND r.shiftID = :shiftId\n     AND (:slotId IS NULL OR r.slotID <> :slotId));
+    activate db
+    db -->> control: eligibleAmbulanceRecords[]
+    deactivate db
+    control -->> ui: eligibleAmbulanceRecords[]
+    deactivate control
+    alt eligibleAmbulanceRecords is empty
+      ui -->> manager: No eligible ambulance; select another shift or slot
+    else eligibleAmbulanceRecords is not empty
+      ui -->> manager: Active, available ambulances with no other same-shift slot
+    end
+    deactivate ui
+
+    ' Empty choices reach the next outer iteration, never candidate selection.
+    opt eligibleAmbulanceRecords is not empty
+      alt Manager chooses to remove an existing assignment
+        ' Alternative 5a1-5a2.
+        manager -> ui: removeAssignedRole(assignmentId)
+        activate ui
+        ui -> control: removeDraftAssignment(assignmentId)
+        activate control
+        control -> assignment: remove(null)
+        activate assignment
+        assignment -->> control: removalChange
+        deactivate assignment
+        control -> db: DELETE FROM Assignment\nWHERE assignmentID = :assignmentId AND slotID = :slotId;
+        activate db
+        db -->> control: deletedRows = 1
+        deactivate db
+        control -> slot: staffingStatus(remainingSlotAssignments, crewPolicy)
+        activate slot
+        slot -->> control: released roles require manpower; updated staffingStatus
+        deactivate slot
+        control -> audit: recordChange("draft assignment removed", actor, time,\npreviousAssignment, null, null)
+        activate audit
+        audit -->> control: auditData
+        deactivate audit
+        control -> db: INSERT INTO AuditEntry\n  (actingUser, timestamp, previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, :reason);
+        activate db
+        db -->> control: insertedRows = 1
+        deactivate db
+        control -->> ui: removed(updatedStaffingStatus)
+        deactivate control
+        ui -->> manager: Assignment removed and change saved; roles require manpower
+        deactivate ui
+
+      else Manager fills a role or replaces an existing assignment
+        ' Main 5; alternative 5a1 / 5a3.
+        manager -> ui: chooseRoleOrReplacement(ambulanceId, roles, replacedAssignmentId?)
+        note over ui, control
+          Replacement keeps the current assignment until the proposal is accepted.
+          A proposed slot receives its ID only when saved.
+        end note
+
+        ' Main 6-8, alternative 8a retry to main 6.
+        loop (1,*) first attempt or result is prevented/cancelled
+          activate ui
+          ui -> control: listCandidates(selection)
+          activate control
+          control -> db: SELECT staffID, availability, assignmentRecords,\n  jobPreference, datedLocation\nFROM CandidateOption\nWHERE rosterWeek = :week AND shiftID = :shiftId\n  AND ambulanceNumber = :ambulanceId AND requestedRoles = :roles\nFETCH FIRST 3 ROWS ONLY;
+          activate db
+          db -->> control: candidateRecords[] (up to three)
+          deactivate db
+          loop for each candidate
+            control -> staff: assignedHours(week, assignmentRecords, policy)
+            activate staff
+            staff -->> control: assignedHours: Hours
+            deactivate staff
+          end
+          control -->> ui: candidateView
+          deactivate control
+          ui -->> manager: Up to three suitable candidates: availability, hours,\njob preference and location for the date
+          deactivate ui
+          note over control, staff
+            I02: pending assignments use unresolved PolicyContext.
+            I03: dated location is supplied; its source is unresolved.
+          end note
+          manager -> ui: selectCandidate(staffId)
+          activate ui
+          ui -> control: assignCandidate(staffId, selection)
+          activate control
+          control -> db: SELECT * FROM StaffRuleContext\nWHERE staffID = :staffId AND rosterWeek = :week;
+          activate db
+          db -->> control: staffRuleRecord (qualifications, assignments, adjacent shifts)
+          deactivate db
+          control -> db: SELECT * FROM RosterSlot\nWHERE ambulanceNumber = :ambulanceId AND shiftID = :shiftId;
+          activate db
+          db -->> control: ambulanceSlotRecords[]
+          deactivate db
+          note over control, rules
+            Bind baseControl to roster:RosterControl.
+            Exclude the replaced assignment where appropriate;
+            preserve unrelated commitments in context.
+          end note
+          ref over manager, ambulance
+            UC-13 Check Assignment Rule
+            result = checkAssignment(proposal, context)
+          end ref
+          alt result = prevented(reason) or cancelled
+            control -->> ui: notAccepted(result)
+            ui -->> manager: Assignment not saved; reason or cancellation outcome
+          else result = allowed
+        ' Only allowed reaches main 9 / alternative 9a.
+        alt ambulance has not been made unavailable
+          control -> assignment: prepare(proposal, confirmed)
+          activate assignment
+          assignment -->> control: confirmedAssignmentData
+          deactivate assignment
+          opt proposed slot has not yet been stored
+            control -> db: INSERT INTO RosterSlot (slotID, rosterWeek, shiftID, ambulanceNumber)\nVALUES (:slotId, :week, :shiftId, :ambulanceId);
+            activate db
+            db -->> control: insertedRows = 1
+            deactivate db
+          end
+          opt existing slot uses a different selected ambulance
+            control -> db: UPDATE RosterSlot SET ambulanceNumber = :ambulanceId\nWHERE slotID = :slotId;
+            activate db
+            db -->> control: updatedRows = 1
+            deactivate db
+          end
+          alt filling an unassigned role
+            control -> db: INSERT INTO Assignment\n  (assignmentID, slotID, staffID, fulfilledRoles, confirmationStatus)\nVALUES (:assignmentId, :slotId, :staffId, :roles, 'confirmed');
+            activate db
+            db -->> control: insertedRows = 1
+            deactivate db
+          else replacing an existing assignment
+            control -> db: UPDATE Assignment\nSET staffID = :staffId, fulfilledRoles = :roles, confirmationStatus = 'confirmed'\nWHERE assignmentID = :replacedAssignmentId AND slotID = :slotId;
+            activate db
+            db -->> control: updatedRows = 1
+            deactivate db
+          end
+          control -> slot: staffingStatus(updatedSlotAssignments, crewPolicy)
+          activate slot
+          slot -->> control: missingRoles, staffRequired, isFullyStaffed
+          deactivate slot
+          control -> audit: recordChange("draft assignment saved", actor, time,\npreviousValues, newValues, null)
+          activate audit
+          audit -->> control: auditData
+          deactivate audit
+          control -> db: INSERT INTO AuditEntry\n  (actingUser, timestamp, previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, :reason);
+          activate db
+          db -->> control: insertedRows = 1
+          deactivate db
+          control -->> ui: saved(updatedStaffingStatus)
+          ui -->> manager: Assignment saved; slot updated; remaining roles require manpower
+        else ambulance made unavailable
+          control -->> ui: invalidAmbulanceWarning(affectedSlot)
+          ui -->> manager: Draft contains an invalid ambulance assignment
+          note over control, db
+            I07: detection mechanism and continuation are unspecified.
+            End this scenario at the warning, without a persisted-success claim.
+          end note
+        end
+          end
+          deactivate control
+          deactivate ui
+        end
+      end
+    end
+  end
+
+  ' Main 10: warning path cannot enter final successful draft save.
+  opt no invalid-ambulance warning
+    manager -> ui: saveDraft(week)
+    activate ui
+    ui -> control: saveDraft(week)
+    activate control
+    control -> db: UPDATE WeeklyRoster SET status = 'draft'\nWHERE rosterWeek = :week AND status = 'draft';
+    activate db
+    db -->> control: affectedRows = 1
+    deactivate db
+    control -> audit: recordChange("draft saved", actor, time, previousDraft, currentDraft, null)
+    activate audit
+    audit -->> control: auditData
+    deactivate audit
+    control -> db: INSERT INTO AuditEntry\n  (actingUser, timestamp, previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, :reason);
+    activate db
+    db -->> control: insertedRows = 1
+    deactivate db
+    control -->> ui: draftSaved(currentDraft)
+    deactivate control
+    ui -->> manager: Weekly roster saved as draft; unfilled roles require manpower
+    deactivate ui
+  end
+end
+
+legend bottom
+UML 2.5. Proposed boundaries, Control classes and operations; illustrative PostgreSQL.
+SQL mappings, context views and supplied event assumptions: interaction-contract.md.
+Open: I02 pending-request policy; I03 dated-location source; I07 unavailable-ambulance continuation.
+Availability is read only. Required draft changes are audited. No transaction/recovery guarantees are assumed.
+endlegend
+@enduml

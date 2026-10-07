@@ -1,0 +1,109 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #334155
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #94A3B8
+  ParticipantBorderColor #64748B
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #334155
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #64748B
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #64748B
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-13: Check Assignment Rule
+caption Main success and all documented alternatives
+
+actor Manager as manager
+participant "roster:RosterBoundary" as ui <<boundary>> #EAF3FC
+participant "baseControl" as base <<control>> #ECF5ED
+participant "rules:AssignmentRuleControl" as rules <<control>> #ECF5ED
+participant "staff:Staff" as staff <<entity>> #FFF9E8
+participant "ambulance:Ambulance" as ambulance <<entity>> #FFF9E8
+
+note over base, rules
+  Called by UC-04, UC-06 or UC-08 with proposal and retrieved context.
+  baseControl is a formal role bound to the calling Control, not a new class.
+end note
+base -> rules: checkAssignment(proposal, context)
+activate rules
+
+' Main 1 and alternative 1a.
+rules -> staff: isQualified(proposal.roles)
+activate staff
+staff -->> rules: qualified: Boolean
+deactivate staff
+alt not qualified
+  rules -->> base: prevented("Not qualified for the role")
+else qualified
+  ' Main 2 and alternative 2a.
+  rules -> staff: hasShiftConflict(proposal, context)
+  activate staff
+  staff -->> rules: staffConflict: Boolean
+  deactivate staff
+  alt staffConflict
+    rules -->> base: prevented("Staff assigned to another same-shift slot")
+  else no staffConflict
+    ' Main 3 and alternative 3a.
+    rules -> ambulance: hasShiftConflict(proposal, context)
+    activate ambulance
+    ambulance -->> rules: ambulanceConflict: Boolean
+    deactivate ambulance
+    alt ambulanceConflict
+      rules -->> base: prevented("Ambulance assigned to another same-shift slot")
+    else no ambulanceConflict
+      ' Main 4 and alternative 4a.
+      rules -> staff: hasMinimumRest(proposal, context)
+      activate staff
+      staff -->> rules: hasTwelveHoursRest: Boolean
+      deactivate staff
+      alt not hasTwelveHoursRest
+        rules -->> base: prevented("Less than 12 hours of rest")
+      else hasTwelveHoursRest
+        ' Main 5-6 and alternative 5a.
+        rules -> staff: projectedWeeklyHours(proposal, context)
+        activate staff
+        staff -->> rules: projectedHours: Hours
+        deactivate staff
+        alt projectedHours > 40
+          rules -> ui: requestHoursDecision(projectedHours)
+          activate ui
+          ui ->> manager: Weekly hours exceed 40; confirm or cancel
+          manager -> ui: submitHoursDecision(decision)
+          ui -->> rules: decision: confirm or cancel
+          deactivate ui
+          alt decision = confirm
+            rules -->> base: allowed
+          else decision = cancel
+            rules -->> base: cancelled
+          end
+        else projectedHours <= 40
+          rules -->> base: allowed
+        end
+      end
+    end
+  end
+end
+deactivate rules
+
+note over base, rules
+  Only allowed permits the base workflow to save the assignment.
+  Every prevented branch skips later checks; cancelled permits no assignment.
+end note
+
+legend bottom
+UML 2.5. Proposed Control operations; Manager acts only through the boundary.
+The base workflow supplies context; this interaction performs no database read or write.
+I02: pending-request contribution to conflict, rest and hours remains an explicit policy input.
+endlegend
+@enduml

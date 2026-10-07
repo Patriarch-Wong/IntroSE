@@ -1,0 +1,115 @@
+@startuml
+title UC-02 — Manage Availability
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 280
+skinparam sequenceMessageAlign center
+skinparam ArrowColor #334155
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #64748B
+  ParticipantBorderColor #64748B
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #334155
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #64748B
+  GroupBackgroundColor #F8FAFC
+}
+actor "Staff" as staffActor
+boundary "planning:StaffPlanningBoundary" as planningUI #EAF3FC
+control "planning:StaffPlanningController" as planning #ECF5ED
+entity "availability:StaffAvailability" as availability #FFF9E8
+entity "audit:AuditEntry" as audit #FFF9E8
+database "Database" as db #F1F5F9
+boundary "notifications:NotificationBoundary" as notifications #EAF3FC
+actor "Manager" as manager
+
+note over planningUI, planning
+  Precondition: staff member is logged in.
+  Trigger: enter or change their own availability.
+  staffId comes from the authenticated user.
+end note
+
+' Main 1–2: own saved availability and the five-week shift choices.
+staffActor -> planningUI : submit("open availability", ownUserContext)
+planningUI -> planning : openAvailability(staffId)
+planning -> db : Retrieve this staff member's saved availability\nand dated day/night shifts in the five-week planning period
+db --> planning : previousAvailability, planningShifts
+planning -> planningUI : display("availability",\npreviousAvailability and planningShifts)
+planningUI --> staffActor : Show saved availability and selectable shifts
+note over planningUI, availability
+  Each selectable day or night shift lasts 12 hours.
+  The form is restricted to the five-week planning period.
+end note
+
+' Main 3–4: local selection followed by submission.
+staffActor -> planningUI : Indicate available shifts in the form
+staffActor -> planningUI : submit("save availability", submission)
+planningUI -> planning : saveAvailability(staffId, submission)
+note right of planning
+  Capture submittedAt on receipt.
+  Wednesday cut-offs are evaluated separately
+  for each submitted roster week.
+  Exact cut-off time is a supplied policy value.
+end note
+
+' Main 5 and alternative 5a1: mixed on-time/late weeks are possible.
+loop for each submitted roster week
+  alt submittedAt is after this week's Wednesday cut-off
+    planning -> availability : prepareWeek(rosterWeek, weekAvailability, true)
+    availability --> planning : preparedWeek (affected availability has lateFlag = true)
+  else submittedAt is on or before this week's Wednesday cut-off
+    planning -> availability : prepareWeek(rosterWeek, weekAvailability, false)
+    availability --> planning : preparedWeek (lateFlag = false)
+  end
+end
+note right of planning
+  preparedAvailability contains every submitted week.
+  lateWeeks contains only the weeks flagged late.
+end note
+
+' Main 6; I01 reconciles the omitted save in alternative 5a.
+planning -> db : Save submitted availability and per-week late flags\nfor this staff member within the five-week planning period
+db --> planning : savedAvailability
+note over planning, db
+  Both on-time and late submissions are saved.
+  Existing published assignments remain unchanged.
+end note
+
+' Main 7 and alternative 5a2: save precedes audit and visibility.
+planning -> audit : recordChange("availability changed", staffId, submittedAt,\npreviousAvailability, savedAvailability, null)
+audit --> planning : auditData
+planning -> db : Append auditData to the audit log
+db --> planning : auditRecorded
+note over planning, db
+  The saved availability, including affected late flags,
+  is now available to managers for roster planning.
+end note
+
+' Alternative 5a3: only the late weeks require a manager notification.
+opt one or more submitted roster weeks are late
+  planning -> notifications : notify(managerId, "late availability",\nstaffId and affected lateWeeks and savedAvailability)
+  notifications -> manager : Present late submissions or changes for consideration
+end
+
+' Main 8 and alternative 5a4: common successful completion.
+planning -> planningUI : display("availability saved", savedAvailability)
+planningUI --> staffActor : Confirm that availability has been saved
+note over staffActor, manager
+  Postconditions: own submitted availability and late flags are stored;
+  managers can see the saved availability; an audit record exists.
+  Any late submission or change has been notified to the manager.
+  Published assignments are unchanged. Any subsequent amendment
+  requires an authorised manager through UC-06 Amend Published Roster.
+end note
+
+legend bottom
+  UML 2.5. Boundaries, controllers and operations are proposed detailed design (I08).
+  Database requests describe persistence; no SQL schema is assumed.
+  I01: late-branch persistence is explicit to satisfy the source postconditions.
+endlegend
+@enduml

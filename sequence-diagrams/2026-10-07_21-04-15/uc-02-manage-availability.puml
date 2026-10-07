@@ -1,0 +1,122 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #334155
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #94A3B8
+  ParticipantBorderColor #64748B
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #334155
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #64748B
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #64748B
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-02: Manage Availability
+caption Main success and all documented alternatives
+
+actor Staff as staffActor
+participant "planning:StaffPlanningBoundary" as ui <<boundary>> #EAF3FC
+participant "planning:StaffPlanningControl" as control <<control>> #ECF5ED
+participant "availability:StaffAvailability" as availability <<entity>> #FFF9E8
+participant "audit:AuditEntry" as audit <<entity>> #FFF9E8
+database "Database" as db #F1F5F9
+participant "notifications:NotificationBoundary" as notifications <<boundary>> #EAF3FC
+actor Manager as manager
+
+note over ui, control
+  Staff is logged in; staffId is their own identity.
+  Planning window: five weeks of 12-hour day/night shifts.
+end note
+
+' Main 1-2: read before displaying saved availability.
+staffActor -> ui: openAvailability()
+activate ui
+ui -> control: openAvailability(staffId)
+activate control
+control -> db: SELECT s.*, a.available, a.lateFlag\nFROM Shift s LEFT JOIN StaffAvailability a\n  ON a.shiftID = s.shiftID AND a.staffID = :staffId\nWHERE s.date >= :windowStart AND s.date < :windowEnd;
+activate db
+db -->> control: shiftAvailabilityRecords[]
+deactivate db
+control -->> ui: availabilityView
+deactivate control
+ui -->> staffActor: Saved availability and selectable shifts
+deactivate ui
+
+' Main 3-4: selections are form input, followed by submission.
+staffActor -> ui: selectAvailableShifts(shiftIds)
+activate ui
+ui -->> staffActor: Selected shifts
+deactivate ui
+staffActor -> ui: submitAvailability(submission)
+activate ui
+ui -> control: saveAvailability(staffId, submission)
+activate control
+
+' Main 5 and alternative 5a1: evaluate each submitted week.
+loop for each submitted roster week
+  control -> control: checkCutoff(week, submittedAt, cutoffPolicy)
+  activate control
+  control -->> control: isLate: Boolean
+  deactivate control
+  control -> availability: prepareWeek(week, selectedShifts, isLate)
+  activate availability
+  availability -->> control: preparedShiftRecords[] with lateFlag = isLate
+  deactivate availability
+end
+note right of control
+  isLate = submittedAt > Wednesday cutoff for that week.
+  Cutoff time is a policy input; lateWeeks records affected weeks.
+end note
+
+' Main 6; late alternative also saves to satisfy postconditions (I01).
+loop for each prepared shift record
+  control -> db: INSERT INTO StaffAvailability\n  (staffID, shiftID, available, lateFlag)\nVALUES (:staffId, :shiftId, :available, :lateFlag)\nON CONFLICT (staffID, shiftID) DO UPDATE\nSET available = EXCLUDED.available, lateFlag = EXCLUDED.lateFlag;
+  activate db
+  db -->> control: affectedRows = 1
+  deactivate db
+end
+
+' Main 7 / alternative 5a2: persistence precedes audit.
+control -> audit: recordChange("availability changed", staffId, submittedAt,\npreviousAvailability, preparedAvailability, null)
+activate audit
+audit -->> control: auditData
+deactivate audit
+control -> db: INSERT INTO AuditEntry\n  (actingUser, timestamp, previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, :reason);
+activate db
+db -->> control: insertedRows = 1
+deactivate db
+note over control, db
+  Saved availability and late flags are visible to managers.
+  Published assignments are unchanged.
+end note
+
+' Alternative 5a3: notification is an asynchronous event, not a reply.
+opt lateWeeks is not empty
+  control ->> notifications: notify(managerId, "late availability", staffId, lateWeeks)
+  activate notifications
+  notifications ->> manager: Late submissions or changes for consideration
+  deactivate notifications
+end
+
+' Main 8 / alternative 5a4: both saved paths share this completion.
+control -->> ui: saved(preparedAvailability, lateWeeks)
+deactivate control
+ui -->> staffActor: Availability saved
+deactivate ui
+
+legend bottom
+UML 2.5. UI/Control classes and operations are proposed design.
+SQL is illustrative PostgreSQL; mappings and notification assumptions are in interaction-contract.md.
+I01: late availability is explicitly saved to satisfy source postconditions.
+endlegend
+@enduml

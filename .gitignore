@@ -1,0 +1,10 @@
+# Track only sequence-diagram sources and rendered exports.
+/*
+!/.gitignore
+!/sequence-diagrams/
+
+/sequence-diagrams/**
+!/sequence-diagrams/**/
+!/sequence-diagrams/**/*.puml
+!/sequence-diagrams/**/*.svg
+!/sequence-diagrams/**/*.png

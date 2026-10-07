@@ -1,0 +1,122 @@
+@startuml
+title UC-13 — Check Assignment Rule
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 280
+skinparam sequenceMessageAlign center
+skinparam ArrowColor #334155
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #64748B
+  ParticipantBorderColor #64748B
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #334155
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #64748B
+  GroupBackgroundColor #F8FAFC
+}
+
+
+
+
+actor Manager as manager
+boundary "roster:RosterBoundary" as rosterUI #EAF3FC
+control "baseController" as baseController #ECF5ED
+control "rules:AssignmentRuleController" as rules #ECF5ED
+entity "staff:Staff" as staff #FFF9E8
+entity "ambulance:Ambulance" as ambulance #FFF9E8
+
+note over baseController, rules
+  Included interaction; never started directly by an actor.
+  Formal baseController binds to roster:RosterController
+  for UC-04 / UC-06, or assignments:AssignmentController
+  for UC-08. It is not an additional controller class.
+  The base workflow supplies proposal and hydrated RuleContext.
+end note
+note over rules, ambulance
+  Context contains recorded qualifications, relevant assignments,
+  other slots in the shift, adjacent shift times and week workload.
+  A replaced assignment is excluded where appropriate;
+  unrelated commitments remain. PolicyContext leaves the
+  contribution of pending assignments unresolved (I02).
+end note
+
+baseController -> rules: checkAssignment(proposal, context)
+
+' Main 1; alternative 1a / 1a1.
+rules -> staff: isQualified(proposal.roles)
+staff --> rules: qualified: Boolean
+break not qualified
+  rules --> baseController: prevented("Staff is not recorded as qualified for the role")
+  note over manager, ambulance
+    Return prevented; skip every remaining check and the hours warning.
+  end note
+end
+
+' Main 2; alternative 2a / 2a1.
+rules -> staff: hasShiftConflict(proposal, context)
+staff --> rules: staffConflict: Boolean
+break staffConflict
+  rules --> baseController: prevented("Staff is assigned to another slot in the same shift")
+  note over manager, ambulance
+    Return prevented; skip every remaining check and the hours warning.
+  end note
+end
+
+' Main 3; alternative 3a / 3a1.
+rules -> ambulance: hasShiftConflict(proposal, context)
+ambulance --> rules: ambulanceConflict: Boolean
+break ambulanceConflict
+  rules --> baseController: prevented("Ambulance is assigned to another slot in the same shift")
+  note over manager, ambulance
+    Return prevented; skip every remaining check and the hours warning.
+  end note
+end
+
+' Main 4; alternative 4a / 4a1.
+rules -> staff: hasMinimumRest(proposal, context)
+staff --> rules: minimumRestSatisfied: Boolean
+note right of staff
+  Required minimum rest between shifts: 12 hours.
+end note
+break not minimumRestSatisfied
+  rules --> baseController: prevented("Assignment leaves less than 12 hours of rest")
+  note over manager, ambulance
+    Return prevented; skip every remaining check and the hours warning.
+  end note
+end
+
+' Main 5; alternative 5a / 5a1 / 5a2; main 6.
+rules -> staff: projectedWeeklyHours(proposal, context)
+staff --> rules: projectedHours: Hours
+alt projectedHours > 40
+  rules -> rosterUI: requestHoursDecision(projectedHours)
+  rosterUI --> manager: Weekly hours warning: projectedHours;\nconfirm to continue or cancel
+  manager -> rosterUI: submit("hoursDecision", decision)
+  rosterUI --> rules: decision: confirm or cancel
+  alt decision = confirm
+    rules --> baseController: allowed
+  else decision = cancel
+    rules --> baseController: cancelled
+  end
+else projectedHours <= 40
+  rules --> baseController: allowed
+end
+
+note over baseController, rules
+  Only allowed permits the base workflow to make the assignment.
+  Prevented returns its reason; cancelled makes no assignment.
+  Each top-level break terminates this included interaction,
+  skipping every subsequent check and the hours warning.
+end note
+
+legend bottom
+  UML 2.5. Boundaries, controllers, value types and operations are proposed detailed design (I08).
+  No persistence occurs here; the base use case supplies context and handles any permitted write.
+  Unresolved: pending-assignment contribution to conflict, rest and hours (I02).
+endlegend
+@enduml
