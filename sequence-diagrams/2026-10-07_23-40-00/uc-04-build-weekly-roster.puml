@@ -24,9 +24,10 @@ skinparam sequence {
 title UC-04: Build Weekly Roster
 
 ' Scope: main success scenario and alternatives 1a, 4a, 5a, 8a, 9a.
-' One allocation loop, no nested loops; maximum nesting depth 3.
-' Referenced: uc-04-prepare-allocation.puml (3-6, 4a, 5a3) and
-' uc-04-remove-assignment.puml (5a1-5a2).
+' Follows the scenario order 1-10. One allocation loop, no nested loops;
+' maximum nesting depth 3.
+' Referenced: uc-04-prepare-allocation.puml (3-6, 4a, 5a), which in turn
+' references uc-04-remove-assignment.puml (5a1-5a2).
 ' Three core database operations are drawn: retrieve/create roster,
 ' save assignment, save draft.
 ' Supporting reads are kept as SQL comments beside the operation that uses them.
@@ -82,25 +83,19 @@ end
 rosterUI -->> manager: draft slots, staff availability\nand roles requiring manpower
 deactivate rosterUI
 
-' Each pass is one Manager request. Candidate selection is only offered once
-' Prepare Allocation has shown candidates, so 4a never reaches allocation.
+' Steps run in scenario order on each pass. After 8a the candidates stay
+' shown, so the next pass skips steps 3-6 and returns to candidate selection.
 loop Manager continues allocating staff
-  alt Manager selects a slot, ambulance and role to fill or replace
-    ' Main 3-6; alternatives 4a and 5a1/5a3, detailed in uc-04-prepare-allocation.puml.
-    ref over manager, rosterUI, roster
-      UC-04 Prepare Allocation
-      selectSlot, chooseRole: candidates shown
-      or no eligible ambulance
-    end ref
-
-  else Manager removes an assigned staff member
-    ' Alternative 5a1-5a2, detailed in uc-04-remove-assignment.puml.
+  opt starting a new allocation (no candidates awaiting selection)
+    ' Main 3-6; alternatives 4a and 5a, detailed in uc-04-prepare-allocation.puml.
     ref over manager, rosterUI, roster, db
-      UC-04 Remove Draft Assignment
-      removeAssignment(assignmentId): role requires manpower
+      UC-04 Prepare Allocation (steps 3-6)
+      result = candidates shown, no eligible ambulance,
+      or assignment removed
     end ref
+  end
 
-  else candidates shown and Manager selects a candidate
+  opt candidates are shown
     ' Main 7-9; alternatives 8a and 9a.
     manager -> rosterUI: selectCandidate(staffId)
     activate rosterUI
