@@ -1,0 +1,62 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04: Build Weekly Roster - Remove Draft Assignment
+
+' Referenced from uc-04-build-weekly-roster.puml for alternative 5a1-5a2.
+' Input: assignmentId of a draft assignment. Result: role requires manpower.
+' SQL is illustrative PostgreSQL; see README.md.
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary\nRoster Allocation Page" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+database "db:Database" as db #F1F5F9
+
+note over manager, roster
+  The draft roster is open and the Manager has
+  chosen an assigned role to remove.
+end note
+
+manager -> rosterUI: removeAssignment(assignmentId)
+activate rosterUI
+rosterUI -> roster: removeAssignment(assignmentId)
+activate roster
+roster -> db: removeStaffAssignment(assignmentId, auditData)
+activate db
+note right of db
+-- Remove the staff member from this role
+DELETE FROM Assignment
+WHERE assignmentID = :assignmentId;
+
+-- Record the removal in the audit log
+INSERT INTO AuditEntry (actingUser,
+  timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, NULL, 'removed');
+end note
+db -->> roster: assignment removed; audit entry stored
+deactivate db
+roster -->> rosterUI: removed(role)
+deactivate roster
+rosterUI -->> manager: assignment removed;\nrole requires manpower
+deactivate rosterUI
+@enduml
