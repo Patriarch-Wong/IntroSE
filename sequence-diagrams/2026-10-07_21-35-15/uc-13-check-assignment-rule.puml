@@ -1,0 +1,104 @@
+@startuml
+title UC-13 Check Assignment Rule
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam maxMessageSize 350
+skinparam sequence {
+  ArrowColor #263238
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F5F7FA
+  GroupBorderColor #607D8B
+  GroupBackgroundColor #FFFFFF
+  GroupHeaderFontColor #263238
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #E8EEF3
+  MessageAlign left
+}
+hide footbox
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary" as rosterUI <<boundary>> #EAF4FB
+participant "baseControl:BaseControl" as baseControl <<control>> #FFF3DA
+participant "rules:AssignmentRuleControl" as rules <<control>> #FFF3DA
+participant "staff:Staff" as staff <<entity>> #EDF6EC
+participant "ambulance:Ambulance" as ambulance <<entity>> #EDF6EC
+
+' BaseControl is a formal caller role, bound to roster:RosterControl in UC-04.
+' The caller supplies its retrieved RuleContext, including PolicyContext.
+' No new persistence or pending-assignment policy is asserted here.
+note over baseControl, rules
+  A staff member was selected in the base workflow.
+  The proposal and retrieved rule context are supplied.
+end note
+
+baseControl -> rules : checkAssignment(proposal, context)
+activate rules
+
+' Main 1 / Alternative 1a: every later check is inside the qualified operand.
+rules -> staff : isQualified(proposal.roles)
+activate staff
+staff -->> rules : qualified
+deactivate staff
+alt not qualified
+  rules -->> baseControl : prevented(not qualified for role)
+else qualified
+  ' Main 2 / Alternative 2a.
+  rules -> staff : hasShiftConflict(proposal, context)
+  activate staff
+  staff -->> rules : staffConflict
+  deactivate staff
+  alt assigned to another slot in this shift
+    rules -->> baseControl : prevented(staff already assigned in shift)
+  else no staff conflict
+    ' Main 3 / Alternative 3a: the selected slot itself is not another slot.
+    rules -> ambulance : hasShiftConflict(proposal, context)
+    activate ambulance
+    ambulance -->> rules : ambulanceConflict
+    deactivate ambulance
+    alt ambulance assigned to another slot in this shift
+      rules -->> baseControl : prevented(ambulance already assigned in shift)
+    else no ambulance conflict
+      ' Main 4 / Alternative 4a: context includes adjacent-week shifts.
+      rules -> staff : hasMinimumRest(proposal, context)
+      activate staff
+      staff -->> rules : hasMinimumRest
+      deactivate staff
+      alt rest is less than 12 hours
+        rules -->> baseControl : prevented(less than 12 hours rest)
+      else at least 12 hours rest
+        ' Main 5 / Alternative 5a: this warning permits a Manager override.
+        rules -> staff : projectedWeeklyHours(proposal, context)
+        activate staff
+        staff -->> rules : projectedHours
+        deactivate staff
+        alt projectedHours > 40
+          rules -> rosterUI : requestHoursDecision(projectedHours)
+          activate rosterUI
+          rosterUI ->> manager : over 40 assigned hours: confirm or cancel
+          manager -> rosterUI : submitHoursDecision(decision)
+          activate rosterUI
+          rosterUI -->> manager : decision received
+          deactivate rosterUI
+          rosterUI -->> rules : decision
+          deactivate rosterUI
+          alt decision = confirm
+            rules -->> baseControl : allowed
+          else decision = cancel
+            rules -->> baseControl : cancelled
+          end
+        else projectedHours <= 40
+          ' Main 6; the base use case performs any subsequent persistence.
+          rules -->> baseControl : allowed
+        end
+      end
+    end
+  end
+end
+deactivate rules
+
+@enduml

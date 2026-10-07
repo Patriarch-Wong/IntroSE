@@ -1,0 +1,124 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #607D8B
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-02: Manage Availability
+
+actor Staff as staffActor
+participant "planning:StaffPlanningBoundary" as planningUI <<boundary>> #EAF4FB
+participant "planning:StaffPlanningControl" as planning <<control>> #FFF3DA
+participant "availability:StaffAvailability" as availability <<entity>> #EDF6EC
+participant "audit:AuditEntry" as audit <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+participant "notifications:NotificationBoundary" as notifications <<boundary>> #EAF4FB
+actor Manager as manager
+
+note over planningUI, planning
+  Staff is logged in and edits their own availability.
+  Planning period: five weeks of 12-hour day/night shifts.
+end note
+
+' All operations and physical SQL mappings are proposed detailed design.
+' SQL is illustrative PostgreSQL with client-bound named placeholders.
+' The session supplies staffId, managerId and the five-week window.
+' Main 1-2: read the dated shifts and this staff member's saved values.
+staffActor -> planningUI: openAvailability()
+activate planningUI
+planningUI -> planning: openAvailability(staffId)
+activate planning
+planning -> db: -- Retrieve saved availability and planning shifts\nSELECT s.*, a.available, a.lateFlag\nFROM Shift s LEFT JOIN StaffAvailability a\nON a.shiftID = s.shiftID AND a.staffID = :staffId\nWHERE s.date >= :windowStart\nAND s.date < :windowEnd;
+activate db
+db -->> planning: shiftAvailabilityRecords[]
+deactivate db
+planning -->> planningUI: availabilityView
+deactivate planning
+planningUI -->> staffActor: saved availability and selectable shifts
+deactivate planningUI
+
+' Main 3-4: each form action has its own boundary execution.
+staffActor -> planningUI: selectAvailableShifts(shiftIds)
+activate planningUI
+planningUI -->> staffActor: selected shifts
+deactivate planningUI
+staffActor -> planningUI: submitAvailability(submission)
+activate planningUI
+planningUI -> planning: saveAvailability(staffId, submission)
+activate planning
+
+' Main 5 / alternative 5a1: evaluate every submitted roster week.
+' checkCutoff returns true iff submittedAt is after that week's Wednesday cutoff.
+' The exact cutoff time/timezone are supplied policy, not selected by this model.
+' selectedShifts is restricted to the current submitted week and displayed window.
+' prepareWeek expands the week into explicit true/false availability records.
+' Accumulate prepared records; lateWeeks comprises weeks whose isLate is true.
+loop each submitted roster week
+  planning -> planning: checkCutoff(week, submittedAt, cutoffPolicy)
+  activate planning
+  planning -->> planning: isLate
+  deactivate planning
+  planning -> availability: prepareWeek(week, selectedShifts, isLate)
+  activate availability
+  availability -->> planning: weekRecords[] with lateFlag = isLate
+  deactivate availability
+end
+
+' Main 6; I01 reconciliation: the late alternative also saves, as required
+' by the UC-02 postconditions and AGENTS.md. All records save before audit.
+' Only StaffAvailability changes; no Assignment or published-roster write occurs.
+loop each prepared shift record
+  planning -> db: -- Save this shift's availability and late flag\nINSERT INTO StaffAvailability\n(staffID, shiftID, available, lateFlag)\nVALUES (:staffId, :shiftId, :available, :lateFlag)\nON CONFLICT (staffID, shiftID) DO UPDATE\nSET available = EXCLUDED.available,\nlateFlag = EXCLUDED.lateFlag;
+  activate db
+  db -->> planning: shift availability and late flag saved
+  deactivate db
+end
+
+' Main 7 / alternative 5a2: record the entire submitted change once after saving.
+' Before values come from the retrieved view, filtered to submitted weeks.
+' After values are the prepared records; no returned database record is implied.
+planning -> audit: recordChange("availability changed", staffId, submittedAt,\npreviousAvailability, preparedAvailability, null)
+activate audit
+audit -->> planning: auditData
+deactivate audit
+planning -> db: -- Store the availability-change audit entry\nINSERT INTO AuditEntry\n(actingUser, timestamp, previousValue, newValue, reason)\nVALUES (:actor, :time, :previous, :new, :reason);
+activate db
+db -->> planning: availability-change audit entry stored
+deactivate db
+note over planning, db
+  Saved availability and late flags are visible to managers.
+  Published assignments remain unchanged.
+end note
+
+' Alternative 5a3: asynchronous presentation through NotificationBoundary.
+' No email transport, durable delivery or manager acknowledgment is assumed.
+opt one or more submitted weeks are late
+  planning ->> notifications: notify(managerId, "late availability", staffId, lateWeeks)
+  activate notifications
+  notifications ->> manager: late availability for consideration: staffId, lateWeeks
+  deactivate notifications
+end
+
+' Main 8 / alternative 5a4: both saved paths reach this single confirmation.
+planning -->> planningUI: availability saved
+deactivate planning
+planningUI -->> staffActor: availability saved
+deactivate planningUI
+@enduml
