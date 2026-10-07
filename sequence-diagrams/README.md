@@ -14,7 +14,7 @@ UC-04's latest revision moves candidate retrieval/display into one retry loop ma
 
 - [Final Use Case.docx](../Final%20Use%20Case.docx): behavioural authority.
 - [Main Class Table.docx](../Main%20Class%20Table.docx): domain baseline.
-- Current UML and project conventions are maintained locally in `AGENTS.md`, which is excluded from this repository.
+- [AGENTS.md](../AGENTS.md): current UML and project conventions.
 - [Project description](../TP2_INF2001%20Team%20Project%20Description%20-%20Ambulance%20Services.pdf): project requirements/reference.
 - [Supporting class diagram](../class-diagrams/main-class-table/domain-class-diagram.svg) and [modelling rules](../class-diagrams/main-class-table/rules.md).
 - [Orchestration plan](../SEQUENCE_DIAGRAM_ORCHESTRATION_PLAN.md): historical execution plan; current project instructions take precedence.

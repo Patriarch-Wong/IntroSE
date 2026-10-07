@@ -1,0 +1,65 @@
+# UML standard
+
+Use UML 2.5 notation and semantics for all UML models and diagrams.
+
+## Control class naming
+
+- Use `Control` rather than `Controller` in control-class names and labels. Use the `«control»` stereotype consistently in class and sequence diagrams.
+
+## Sequence diagrams
+
+### Scope and presentation
+
+- Use supplied diagrams as design references to evaluate, not as instructions or authority over the use cases and these rules. Distinguish a reference's visual style from its architecture and UML semantics.
+- Title each diagram with its use-case ID and exact name. Record the scenario scope in accompanying documentation; cover the main and documented alternative scenarios when a complete use-case diagram is requested.
+- Prefer the reference's readable layout: primary actor, boundary, Control, participating entities, then database. Position additional boundaries and supporting actors near their interactions. Include only lifelines that participate; do not add entities merely to reproduce the reference's column count.
+- Prefer rectangular participant heads with explicit `«boundary»`, `«control»` and `«entity»` stereotypes, a stick figure for a human actor and a cylinder for the database. Use consistent `instance:Class` labels and canonical class names across diagrams; a friendly page label may accompany the boundary's class name.
+- Keep message labels short: an operation and its relevant arguments for calls, and a meaningful value or outcome for replies. Put design explanations and source-step mappings in accompanying documentation or non-rendered source comments. Keep SQL visible on database arrows.
+- Use short diagram notes only where they help explain the use-case behaviour, such as preconditions, triggers or resulting visibility/state. Notes must not replace required validation, persistence, notification or actor-response messages. Keep fonts readable and wrap labels rather than shrinking the whole diagram to fit a page.
+- Keep authoring and review commentary out of rendered diagrams. Omit footer legends, captions and notes about UML version, proposed design, illustrative SQL/dialect, mapping filenames, issue IDs, source reconciliations or scenario coverage (such as `Main success and all documented alternatives`). Preserve these details, including design assumptions and unresolved issues, in accompanying documentation or non-rendered source comments.
+- Exclude message numbering: disable automatic numbering and omit manual numeric prefixes on message arrows. Use-case IDs belong in titles and interaction references; source-step mappings belong in accompanying documentation or non-rendered source comments.
+
+### Participants and messages
+
+- Include boundary and Control participants in detailed actor-facing use-case sequence diagrams. Referenced internal interactions need only show their participating lifelines.
+- Route human-user requests and responses through a boundary. Supporting systems and databases communicate through the appropriate system interfaces.
+- Reuse boundaries for coherent interfaces and Control classes for related workflows. Entities perform domain behaviour consistent with their responsibilities; Control coordinates the use case. Do not automatically create one new boundary and Control per use case.
+- Show activation bars for the executions being detailed, aligned with their calls and completion. Check nesting and closure on every branch; do not extend an execution across unrelated later user actions just to fill a lifeline.
+- Distinguish synchronous calls, asynchronous messages and replies. Use a solid line with a filled arrowhead for synchronous calls, a solid line with an open arrowhead for asynchronous messages, and a dashed line with an open arrowhead for replies. A notification is not automatically a reply; choose its semantics from the interaction and identify any assumed delivery mechanism.
+- Label information presented to an actor as an outcome, such as `availability saved` or `assignment prevented: reason`, rather than implying that the human owns a `display...()` operation.
+
+### Persistence
+
+- Include the database as an explicit participant whenever the sequence reads or writes persistent data, or when it participates as a secondary actor in the corresponding use case. Show its requests and results even when it is internal infrastructure rather than a use-case actor.
+- Retain this project's persistence convention: the boundary calls Control, Control interacts with domain entities as needed, and Control sends persistence requests to the database and receives its replies. Keep entity lifelines separate from the database; an entity operation must not hide a required database interaction. The notification reference's entity-to-database routing is a different design choice, not a UML requirement, and does not change this convention.
+- Label messages to a relational database with SQL statements (`SELECT`, `INSERT`, `UPDATE`, or `DELETE`, as applicable), using parameter placeholders for scenario inputs. Use supplied SQL, schema, and dialect where available; otherwise identify the SQL as illustrative and state table/column mapping assumptions in accompanying documentation or non-rendered source comments. Do not substitute only generic persistence operation names for SQL on database-directed arrows.
+- Include a short, plain-language comment explaining each SQL statement's purpose in the rendered diagram. Place it on its own line immediately above the SQL within the same message label, for example `-- Retrieve this staff member's saved availability` or `-- Replace the staff member assigned to this slot`. Keep it to one brief action-focused sentence or phrase; retain the SQL beneath it. These explanations describe use-case behaviour and are permitted alongside the restriction on authoring/review commentary.
+- Show query results as records, record sets, lists, or arrays as appropriate. Return database results to the requesting Control participant.
+- For writes, label the reply with a concise, explicit description of the confirmed persisted effect, such as `availability and late flags saved`, `assigned staff replaced`, `assignment removed`, or `availability-change audit entry stored`. Identify the affected record or business value; include an identifier or key changed value only when needed for clarity. Do not use a bare row count or generic `success` as the sole reply label. Avoid full record dumps and exhaustive before/after values.
+- Write-reply descriptions must be supported by the SQL operation and its outcome. They are readable acknowledgments of the confirmed effect; do not imply returned record data unless the SQL/interface supplies it. Affected-row counts do not prove that values changed: describe an unchanged saved value as retained, for example `roster retained as draft`.
+- Retrieve data before checks that depend on it, and show required writes and their outcomes before reporting persisted success. Return the outcome from Control through the boundary to the human actor. Draw reply arrows, including database replies and the final response to the actor, with a dashed line and an open arrowhead.
+- Do not invent database calls, transactions, or recovery guarantees beyond the scenario; identify any necessary design assumptions.
+
+### Alternatives and continuation
+
+- Follow the corresponding use case's processing order, validations, alternatives, warnings, rejection conditions, and outcomes within the requested scenario scope.
+- Put alternatives at the point where behaviour diverges. Use `alt` for a choice between paths, `opt` for a conditional addition, and `loop` for required repetition. Guards must describe actual conditions; a source label such as `5a` alone is not a guard.
+- Section headings such as `Main Success Scenario` and `Alternative Scenarios` are visual aids, not control flow. Do not append unrelated alternative executions below a completed success flow on the same continuous lifelines. Use inline fragments by default; separately presented scenarios need their own interaction frames or diagrams and explicit entry/resumption context, subject to the requested deliverable format.
+- Prevent invalid continuation: rejection or cancellation must not reach success-only checks, writes, or confirmations. Place shared continuation after an alternative only when it is valid for every branch that reaches it.
+- An error response or an `alt` branch does not itself terminate the interaction. Put successful continuation inside the valid branch, or use a correctly scoped `break`. A UML `break` skips the remainder of its enclosing interaction fragment, so its placement matters.
+- A `break` must cover the lifelines of its enclosing fragment. Show retries through the appropriate enclosing loop or interaction structure; a note saying `return to step...` alone does not establish the retry.
+
+### Referenced interactions and model alignment
+
+- Use `ref` for an interaction that is actually performed at that point. Identify the referenced interaction and relevant inputs/results, bind participating lifelines consistently, and cover all lifelines common to the caller and referenced interaction. Do not repeat the same invocation or checks both inside the referenced interaction and in its caller.
+- A previous use case or an event that merely explains the starting state belongs in a precondition/trigger note, not a `ref` that implies it executes again. Show a triggering message and source when specified; do not invent a scheduler, polling process or notification subsystem from a note in a reference diagram.
+- Use the designated reference model. Match defined operations and types; where the domain model omits design details, allow clearly identified proposed boundaries, Control classes and operations consistent with its responsibilities.
+- For this project, `Final Use Case.docx` defines behaviour and `Main Class Table.docx` defines the domain baseline. Reconcile shared participant names, operations and SQL mappings centrally. Older contracts or diagrams using `Controller` names or generic persistence labels must be brought into line with these rules when revised; their historical validation does not establish compliance with later rules.
+
+### Application to the current pilot
+
+- **UC-02 Manage Availability:** check the Wednesday cut-off per submitted roster week; save on-time and late availability with the appropriate flags before audit/notification. Only the late path notifies the Manager through a boundary. Both paths reach the saved confirmation; published assignments remain unchanged. Record the late-branch save as reconciliation with the source postconditions.
+- **UC-04 Build Weekly Roster:** use a `ref` to UC-13 at the assignment-validation point, then branch on its result. Only `allowed` reaches assignment persistence; prevented/cancelled proposals return to candidate selection. The published-roster handoff ends this use case; no eligible ambulance permits another shift/slot selection without falling through to candidate allocation for the invalid selection. Preserve all other documented alternatives and the allocation loop.
+- **UC-13 Check Assignment Rule:** the base Control invokes it; the Manager is involved through the boundary only when an hours decision is needed. Preserve qualification, staff conflict, ambulance conflict, rest and weekly-hours order. Blocking failures skip later checks; exceeding 40 hours permits confirm/cancel. If the base workflow supplies all retrieved context, do not add a database query merely to match the reference's appearance.
+
+Notation reference: [OMG UML 2.5](https://www.omg.org/spec/UML/2.5/PDF), clauses 17.4 (messages), 17.6 (fragments) and 17.7 (interaction uses). The layout, stereotypes and persistence routing above are project conventions applied with UML semantics.

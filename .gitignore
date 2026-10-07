@@ -1,6 +1,7 @@
 # Track sequence diagrams and related source, design and review documents.
 /*
 !/.gitignore
+!/AGENTS.md
 !/Final Use Case.docx
 !/Main Class Table.docx
 !/Extracted Class Table.docx
@@ -30,8 +31,7 @@
 !/class-diagrams/main-class-table/domain-class-diagram.png
 !/class-diagrams/main-class-table/rules.md
 
-# Keep local instructions, archives and superseded material out of new commits.
-[Aa][Gg][Ee][Nn][Tt][Ss].md
+# Keep archives and superseded material out of new commits.
 /old/
 /old*
 /Revised class tables.docx
