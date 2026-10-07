@@ -1,0 +1,87 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-04: Build Weekly Roster - Prepare Allocation
+
+' Referenced from uc-04-build-weekly-roster.puml for main 3-6, 4a and 5a.
+' Result: candidates shown, no eligible ambulance (4a) or assignment removed (5a2).
+' Supporting reads are SQL comments; SQL is illustrative PostgreSQL.
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary\nRoster Allocation Page" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+database "db:Database" as db #F1F5F9
+
+manager -> rosterUI: selectSlot(shiftId, slotId)
+activate rosterUI
+rosterUI -> roster: selectSlot(shiftId, slotId)
+activate roster
+/'
+-- Find active, available ambulances not used by another slot in this shift
+SELECT a.ambulanceNumber FROM Ambulance a
+JOIN AmbulanceAvailability u ON u.ambulanceNumber = a.ambulanceNumber
+WHERE a.activeStatus = 'active' AND u.shiftID = :shiftId AND u.available
+AND NOT EXISTS (SELECT 1 FROM RosterSlot r
+  WHERE r.ambulanceNumber = a.ambulanceNumber
+    AND r.shiftID = :shiftId AND r.slotID <> :slotId);
+'/
+roster -->> rosterUI: eligibleAmbulances[]
+deactivate roster
+
+break eligibleAmbulances is empty
+  ' Alternative 4a: the Manager may select another shift or slot next.
+  rosterUI -->> manager: no eligible ambulance
+  note over manager, db
+    Another shift or slot may be selected
+    on the next allocation pass.
+  end note
+end
+
+rosterUI -->> manager: eligible ambulances for the slot
+deactivate rosterUI
+
+break Manager removes an assigned staff member
+  ' Alternative 5a1-5a2; replacing instead continues below (5a3).
+  ref over manager, rosterUI, roster, db
+    UC-04 Remove Draft Assignment
+    removeAssignment(assignmentId): role requires manpower
+  end ref
+end
+
+' Main 5-6; replacedAssignmentId is given when replacing (5a1/5a3).
+manager -> rosterUI: chooseRole(ambulanceId, role,\nreplacedAssignmentId?)
+activate rosterUI
+rosterUI -> roster: listCandidates(selection)
+activate roster
+/'
+-- Retrieve up to three suitable candidates with their assigned hours
+SELECT staffID, availability, assignedHours, jobPreference, datedLocation
+FROM CandidateOption
+WHERE rosterWeek = :week AND shiftID = :shiftId AND role = :role
+FETCH FIRST 3 ROWS ONLY;
+'/
+roster -->> rosterUI: candidateView
+deactivate roster
+rosterUI -->> manager: up to three candidates: availability,\nassigned hours, job preference and location
+deactivate rosterUI
+@enduml

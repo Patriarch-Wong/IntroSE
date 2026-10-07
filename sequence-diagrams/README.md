@@ -4,11 +4,11 @@
 
 | Use case | Diagram | Editable source | Design and review notes |
 |---|---|---|---|
-| UC-02 Manage Availability | [SVG](2026-10-07_21-35-15/uc-02-manage-availability.svg) · [PNG](2026-10-07_21-35-15/uc-02-manage-availability.png) | [PlantUML](2026-10-07_21-35-15/uc-02-manage-availability.puml) | [Batch notes](2026-10-07_21-35-15/README.md) |
-| UC-04 Build Weekly Roster | [SVG](2026-10-07_22-28-47/uc-04-build-weekly-roster.svg) · [PNG](2026-10-07_22-28-47/uc-04-build-weekly-roster.png) | [PlantUML](2026-10-07_22-28-47/uc-04-build-weekly-roster.puml) | [Retry revision](2026-10-07_22-28-47/README.md) · [Validation](2026-10-07_22-28-47/validation-report.md) |
+| UC-02 Manage Availability | [SVG](2026-10-07_23-40-00/uc-02-manage-availability.svg) · [PNG](2026-10-07_23-40-00/uc-02-manage-availability.png) | [PlantUML](2026-10-07_23-40-00/uc-02-manage-availability.puml) | [Batch notes](2026-10-07_23-40-00/README.md) |
+| UC-04 Build Weekly Roster | [SVG](2026-10-07_23-40-00/uc-04-build-weekly-roster.svg) · [PNG](2026-10-07_23-40-00/uc-04-build-weekly-roster.png) | [PlantUML](2026-10-07_23-40-00/uc-04-build-weekly-roster.puml) | [Batch notes](2026-10-07_23-40-00/README.md) |
 | UC-13 Check Assignment Rule | [SVG](2026-10-07_21-35-15/uc-13-check-assignment-rule.svg) · [PNG](2026-10-07_21-35-15/uc-13-check-assignment-rule.png) | [PlantUML](2026-10-07_21-35-15/uc-13-check-assignment-rule.puml) | [Batch notes](2026-10-07_21-35-15/README.md) |
 
-UC-04's latest revision moves candidate retrieval/display into one retry loop matching alternative 8a's return to step 6. UC-13 is still invoked through the existing interaction reference. Earlier timestamped batches are historical versions.
+UC-02 and UC-04 were recreated under the updated AGENTS.md: concise database operation labels with SQL in side notes and source comments, and no nested loops. The earlier [simplified UC-04 revision](2026-10-07_23-10-00/README.md) remains for reference. UC-13 is still invoked through the existing interaction reference. Earlier timestamped batches are historical versions.
 
 A separate [UC-04 sample following the supplied rough draft](sample-flatter-uc-04/README.md) uses three core database operations, short arrow labels and original SQL in side notes/source comments. The main-flow sample has three levels of control-flow nesting; companion diagrams retain the broader alternatives. It is a presentation sample, not a replacement for the latest version above.
 

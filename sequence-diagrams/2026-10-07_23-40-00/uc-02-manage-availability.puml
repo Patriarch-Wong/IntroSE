@@ -1,0 +1,120 @@
+@startuml
+hide footbox
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam maxMessageSize 350
+skinparam sequenceMessageAlign left
+skinparam BoxPadding 8
+skinparam ArrowColor #263238
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+skinparam sequence {
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F8FAFC
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #455A64
+  GroupBackgroundColor #F8FAFC
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #FFFFFF
+}
+title UC-02: Manage Availability
+
+' Scope: main success scenario and alternative 5a (late submission).
+' One loop, no nested loops. Two database operations are drawn: retrieve
+' availability, and save availability with its audit entry.
+' SQL is illustrative PostgreSQL; mappings and assumptions are in README.md.
+
+actor Staff as staffActor
+participant "planningUI:StaffPlanningBoundary\nAvailability Page" as planningUI <<boundary>> #EAF4FB
+participant "planning:StaffPlanningControl" as planning <<control>> #FFF3DA
+participant "availability:StaffAvailability" as availability <<entity>> #EDF6EC
+database "db:Database" as db #F1F5F9
+participant "notifications:NotificationBoundary" as notifications <<boundary>> #EAF4FB
+actor Manager as manager
+
+note over staffActor, planning
+  Staff member is logged in and edits their own availability
+  for 12-hour shifts within the five-week planning period.
+end note
+
+' Main 1-2.
+staffActor -> planningUI: openAvailability()
+activate planningUI
+planningUI -> planning: openAvailability(staffId)
+activate planning
+planning -> db: retrieveAvailability(staffId, window)
+activate db
+note right of db
+-- Retrieve saved availability and planning shifts
+SELECT s.*, a.available, a.lateFlag
+FROM Shift s LEFT JOIN StaffAvailability a
+  ON a.shiftID = s.shiftID AND a.staffID = :staffId
+WHERE s.date >= :windowStart AND s.date < :windowEnd;
+end note
+db -->> planning: shiftAvailabilityRecords[]
+deactivate db
+planning -->> planningUI: availabilityView
+deactivate planning
+planningUI -->> staffActor: saved availability and\nday/night shifts for five weeks
+deactivate planningUI
+
+' Main 3-4.
+staffActor -> planningUI: submitAvailability(selectedShifts)
+activate planningUI
+planningUI -> planning: saveAvailability(staffId, selectedShifts)
+activate planning
+
+' Main 5; alternative 5a1: the cut-off is checked per submitted roster week.
+loop each submitted roster week
+  planning -> planning: checkCutoff(week, submittedAt)
+  activate planning
+  planning -->> planning: isLate
+  deactivate planning
+  planning -> availability: prepareWeek(week, selectedShifts, isLate)
+  activate availability
+  availability -->> planning: weekRecords[] with late flag
+  deactivate availability
+end
+
+' Main 6-7; alternative 5a2. Saved on both paths; no Assignment is written.
+/'
+-- Record the availability change in the audit log
+INSERT INTO AuditEntry (actingUser, timestamp, previousValue, newValue, reason)
+VALUES (:actor, :time, :previous, :new, NULL);
+'/
+planning -> db: saveAvailabilityAndAudit(records, auditData)
+activate db
+note right of db
+-- Save each shift's availability and late flag
+INSERT INTO StaffAvailability
+  (staffID, shiftID, available, lateFlag)
+VALUES (:staffId, :shiftId, :available, :lateFlag)
+ON CONFLICT (staffID, shiftID) DO UPDATE
+SET available = EXCLUDED.available,
+    lateFlag = EXCLUDED.lateFlag;
+end note
+db -->> planning: availability, late flags and\naudit entry saved
+deactivate db
+note over planning, db
+  Saved availability is visible to managers.
+  Published assignments remain unchanged.
+end note
+
+' Alternative 5a3: asynchronous on-screen notification; no email assumed.
+opt one or more submitted weeks are late
+  planning ->> notifications: notify(managerId, staffId, lateWeeks)
+  activate notifications
+  notifications ->> manager: late availability change for\nconsideration: staff member, weeks
+  deactivate notifications
+end
+
+' Main 8; alternative 5a4.
+planning -->> planningUI: availabilitySaved
+deactivate planning
+planningUI -->> staffActor: availability saved
+deactivate planningUI
+@enduml
