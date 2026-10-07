@@ -1,0 +1,279 @@
+@startuml
+title UC-04: Build Weekly Roster
+
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName Arial
+skinparam defaultFontSize 14
+skinparam shadowing false
+skinparam roundcorner 0
+skinparam maxMessageSize 320
+skinparam sequence {
+  ArrowColor #263238
+  LifeLineBorderColor #607D8B
+  ParticipantBorderColor #455A64
+  ParticipantBackgroundColor #F5F7FA
+  ActorBorderColor #263238
+  ActorBackgroundColor #FFFFFF
+  GroupBorderColor #607D8B
+  GroupBackgroundColor #FFFFFF
+  GroupHeaderFontColor #263238
+  ActivationBorderColor #455A64
+  ActivationBackgroundColor #E8EEF3
+  DividerBackgroundColor #F1F5F9
+  DividerBorderColor #607D8B
+  MessageAlign left
+}
+skinparam NoteBackgroundColor #FFFBEA
+skinparam NoteBorderColor #C8BE8A
+hide footbox
+
+' Class names follow "Main Class Table.docx". Operation names are provisional
+' until the class diagram is finalised. The control object performs all
+' Database I/O; entities hold the domain logic listed in the class table.
+
+actor Manager as manager
+participant "rosterUI:RosterBoundary" as rosterUI <<boundary>> #EAF4FB
+participant "roster:RosterControl" as roster <<control>> #FFF3DA
+participant "rules:AssignmentRuleControl" as rules <<control>> #FFF3DA
+participant "weeklyRoster:WeeklyRoster" as weekly <<entity>> #EDF6EC
+participant "slot:RosterSlot" as slot <<entity>> #EDF6EC
+participant "ambulance:Ambulance" as ambulance <<entity>> #EDF6EC
+participant "staff:Staff" as staff <<entity>> #EDF6EC
+participant "assignment:Assignment" as assignment <<entity>> #EDF6EC
+participant "audit:AuditEntry" as audit <<entity>> #EDF6EC
+database "Database" as db #F1F5F9
+
+note over manager, roster
+  Precondition: the Manager is logged in.
+  Trigger: the Manager begins or continues planning a roster week.
+end note
+
+== Steps 1–2: Open a roster week ==
+
+manager -> rosterUI : openRosterAllocation()
+activate rosterUI
+rosterUI -->> manager : roster allocation page
+manager -> rosterUI : selectWeek(week)
+rosterUI -> roster : openWeek(week)
+activate roster
+roster -> db : retrieve roster for week
+activate db
+db -->> roster : rosterRecord or none
+deactivate db
+
+opt no roster exists for week
+  roster -> weekly : <<create>> WeeklyRoster(week, status = draft)
+  roster -> db : store empty draft roster
+  activate db
+  db -->> roster : stored
+  deactivate db
+end
+
+break 1a. roster for week is already published
+  roster -->> rosterUI : publishedRoster
+  rosterUI -->> manager : display published roster (read only)
+  note right of manager
+    1a2. Changes are made through
+    UC-06 Amend Published Roster.
+    1a3. UC-04 ends.
+  end note
+end
+
+roster -> db : retrieve slots, ambulances, assignments\nand staff availability for week
+activate db
+db -->> roster : week details
+deactivate db
+loop for each roster slot
+  roster -> slot : getStaffingStatus()
+  activate slot
+  slot -->> roster : missingRoles, staffRequired, isFullyStaffed
+  deactivate slot
+end
+roster -->> rosterUI : draftRosterView
+deactivate roster
+rosterUI -->> manager : display slots, assigned ambulances,\nassigned staff and roles requiring manpower
+deactivate rosterUI
+
+== Steps 3–9: Allocate (repeated as required, step 10) ==
+
+loop Manager continues allocating
+  manager -> rosterUI : selectSlot(shift, slot)
+  activate rosterUI
+  rosterUI -> roster : getEligibleAmbulances(shift, slot)
+  activate roster
+  roster -> db : retrieve ambulances, ambulance availability\nand roster slots for shift
+  activate db
+  db -->> roster : ambulance records
+  deactivate db
+  loop for each ambulance
+    roster -> ambulance : isEligible(shift, slot)
+    activate ambulance
+    note right of ambulance
+      active, available for the shift and
+      not assigned to another slot in the
+      same shift
+    end note
+    ambulance -->> roster : eligible
+    deactivate ambulance
+  end
+  roster -->> rosterUI : eligibleAmbulances[]
+  deactivate roster
+
+  alt 4a. no eligible ambulance
+    rosterUI -->> manager : no eligible ambulance is available
+    note right of manager
+      4a2. The Manager may select
+      another shift or roster slot.
+    end note
+    deactivate rosterUI
+
+  else eligible ambulances found
+    rosterUI -->> manager : display eligible ambulances
+    deactivate rosterUI
+
+    alt 5a / 5a2. remove an existing assignment
+      manager -> rosterUI : removeAssignment(assignment)
+      activate rosterUI
+      rosterUI -> roster : removeAssignment(assignment)
+      activate roster
+      roster -> db : delete assignment
+      activate db
+      db -->> roster : deleted
+      deactivate db
+      roster -> slot : getStaffingStatus()
+      activate slot
+      slot -->> roster : missingRoles (released role requires manpower)
+      deactivate slot
+      roster -> audit : <<create>> AuditEntry(actingUser, timestamp,\npreviousValue, newValue = none)
+      roster -> db : store audit entry
+      activate db
+      db -->> roster : stored
+      deactivate db
+      roster -->> rosterUI : removed(staffingStatus)
+      deactivate roster
+      rosterUI -->> manager : role marked as requiring manpower;\nchange saved
+      deactivate rosterUI
+
+    else 5. fill a role, or 5a3. replace an assigned staff member
+      manager -> rosterUI : selectAmbulanceAndRole(ambulance, role\n[, assignmentToReplace])
+      activate rosterUI
+      rosterUI -> roster : findCandidates(slot, ambulance, role)
+      activate roster
+
+      loop until the assignment is saved (8a3 returns to step 6)
+        roster -> db : retrieve suitable staff with availability,\nassignments, job preference and station for date
+        activate db
+        db -->> roster : candidate records (up to three)
+        deactivate db
+        loop for each candidate
+          roster -> staff : getWeeklyAssignedHours(week)
+          activate staff
+          staff -->> roster : assignedHours
+          deactivate staff
+        end
+        roster -->> rosterUI : candidates[0..3]
+        deactivate roster
+        rosterUI -->> manager : display up to three candidates: availability,\nassigned hours, job preference, location for date
+        deactivate rosterUI
+
+        manager -> rosterUI : selectCandidate(staff)
+        activate rosterUI
+        rosterUI -> roster : proposeAssignment(staff, role, slot)
+        activate roster
+        roster -> db : retrieve staff qualifications and\ncommitments around the shift
+        activate db
+        db -->> roster : rule context
+        deactivate db
+
+        ref over rosterUI, roster, rules, slot, ambulance, staff
+          <b>Step 8:</b> include UC-13 Check Assignment Rule
+          result = checkAssignment(proposal, context)
+          result : allowed | prevented(reason) | cancelled
+        end ref
+
+        alt 8a. result is prevented(reason) or cancelled
+          note over roster
+            8a1. The assignment is not saved.
+          end note
+          roster -->> rosterUI : notSaved(reason)
+          rosterUI -->> manager : display reason or outcome
+          note right of manager
+            8a3. Returns to step 6:
+            candidates are shown again.
+          end note
+
+        else result is allowed
+          alt new assignment
+            roster -> assignment : <<create>> Assignment(staff, slot, role)
+          else replacement
+            roster -> assignment : replaceStaff(staff)
+            activate assignment
+            assignment -->> roster : updated
+            deactivate assignment
+          end
+          roster -> slot : setAmbulance(ambulance)
+          activate slot
+          slot -->> roster : updated
+          deactivate slot
+          roster -> db : save assignment and roster slot
+          activate db
+          db -->> roster : saved
+          deactivate db
+          roster -> slot : getStaffingStatus()
+          activate slot
+          slot -->> roster : missingRoles, staffRequired, isFullyStaffed
+          deactivate slot
+          roster -> audit : <<create>> AuditEntry(actingUser, timestamp,\npreviousValue, newValue)
+          roster -> db : store audit entry
+          activate db
+          db -->> roster : stored
+          deactivate db
+
+          roster -> slot : hasUnavailableAmbulance()
+          activate slot
+          slot -> ambulance : isAvailable(shift)
+          activate ambulance
+          ambulance -->> slot : available
+          deactivate ambulance
+          slot -->> roster : invalidAmbulance
+          deactivate slot
+          roster -->> rosterUI : saved(staffingStatus, invalidAmbulance)
+          deactivate roster
+
+          alt 9a. ambulance has been made unavailable
+            rosterUI -->> manager : warning: draft contains an invalid\nambulance assignment
+          else ambulance still available
+            rosterUI -->> manager : assignment saved, slot updated;\nremaining roles requiring manpower shown
+          end
+          deactivate rosterUI
+        end
+      end
+    end
+  end
+end
+
+== Step 10: Save as draft ==
+
+manager -> rosterUI : saveDraft()
+activate rosterUI
+rosterUI -> roster : saveDraft(week)
+activate roster
+roster -> weekly : identifyShortfalls()
+activate weekly
+weekly -->> roster : unfilled roles requiring manpower
+deactivate weekly
+roster -> db : store roster as draft
+activate db
+db -->> roster : stored
+deactivate db
+roster -> audit : <<create>> AuditEntry(actingUser, timestamp,\npreviousValue, newValue)
+roster -> db : store audit entry
+activate db
+db -->> roster : stored
+deactivate db
+roster -->> rosterUI : draftSaved(shortfalls)
+deactivate roster
+rosterUI -->> manager : roster saved as draft;\nunfilled roles requiring manpower identified
+deactivate rosterUI
+
+@enduml
