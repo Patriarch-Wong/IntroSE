@@ -1,6 +1,8 @@
-# Track only sequence-diagram sources and rendered exports.
+# Track sequence diagrams and their authoritative source documents.
 /*
 !/.gitignore
+!/Final Use Case.docx
+!/Main Class Table.docx
 !/sequence-diagrams/
 
 /sequence-diagrams/**
